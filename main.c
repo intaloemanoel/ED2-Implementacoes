@@ -22,8 +22,9 @@ void le_cliente(FILE *in) {
 
 void main(int argc, char** argv) {
     FILE *out;
+    FILE *outHash;
 
-    if ((out = fopen("cliente.dat", "w+b")) == NULL) {
+    if ((out = fopen("cliente.dat", "w+b")) == NULL || (outHash = fopen("tabHash.dat", "w+b")) == NULL) {
         printf("Erro ao abrir arquivo\n");
         exit(1);
     } else {
