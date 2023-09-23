@@ -1,17 +1,12 @@
 #ifndef HASH_H
 #define HASH_H
 
-#include "cliente.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "cliente.h"
 
-typedef struct TabelaHash {
-    int tamanho;
-    Cliente* clientes;
-} TabelaHash;
+int posicao_hash(int chave, int tamanho);
 
-int funcao_hash(int chave, int tamanho);
-
-TabelaHash* cria_tabela(int tamanho);
+Cliente* inicializa_tabela(int tamanho);
 
 #endif

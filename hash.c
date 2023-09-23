@@ -1,20 +1,18 @@
-#include "hash.h"
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include "cliente.h"
+#include "hash.h"
 
-int funcao_hash(int chave, int tamanho){
+int posicao_hash(int chave, int tamanho){
     return chave % tamanho;
 }
 
-TabelaHash* cria_tabela(int tamanho){
-    TabelaHash* tabela;
-    struct elemento *tabela[10];
-    tabela = (TabelaHash*) malloc(sizeof(TabelaHash));
-    //???????????????? me perdi aqui
+Cliente* inicializaTabela(int tamanho){
+    
 
     for(int i = 0; i < tamanho; i++){
-        tabela[i] = NULL;//-1 significa que nao tem um registro na posicao i do vetor.
+    	Hash[i].proximo = NULL;
     }
 
-    return tabela;
+    return Hash;
 }
