@@ -10,8 +10,15 @@ typedef struct TabelaHash {
     Cliente* clientes;
 } TabelaHash;
 
+typedef struct Elemento {
+    Elemento* proximo;
+    Cliente cliente;
+} Elemento;
+
 int funcao_hash(int chave, int tamanho);
 
 TabelaHash* cria_tabela(int tamanho);
+TabelaHash* insere_cliente_na_tabela_hash(Cliente cliente);
+
 
 #endif

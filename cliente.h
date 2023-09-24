@@ -7,7 +7,6 @@
 typedef struct Cliente {
     int cod;
     char nome[100];
-    struct Cliente *proximo;
 } Cliente;
 
 // Imprime funcionario
