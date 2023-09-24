@@ -23,23 +23,47 @@ TabelaHash* cria_tabela(int tamanho){
 TabelaHash* insere_cliente_na_tabela_hash(TabelaHash* tabelaHash, Cliente cliente) {
     TabelaHash tabelaTemp;
     tabelaTemp = *tabelaHash;
+    int interacao;
 
     int resultadoFuncaoHash;
     resultadoFuncaoHash = funcao_hash(cliente.cod, tabelaTemp.tamanho);
 
     Elemento* elementoAtual;
+    Elemento* novoElemento;
     elementoAtual = &tabelaTemp.elementos[resultadoFuncaoHash];
 
+    interacao = 0;
     while {
-        if ((*elementoAtual).proximo == NULL) {
-            (*elementoAtual).proximo = &Elemento {
+        if (elementoAtual->proximo == NULL && interacao == 0) {
+            novoElemento = &Elemento {
                 proximo: NULL;
                 cliente: cliente
             };
+            elementoAtual = novoElemento;
             break;
+        } else if (elementoAtual->proximo == NULL && interacao > 0) {
+             elementoAtual->proximo = &Elemento {
+                proximo: NULL
+                cliente: cliente
+             };
+             break;
         } else {
-            elementoAtual = (*elementoAtual).proximo;
+            elementoAtual = elementoAtual->proximo;
+            interacao = interacao + 1;
         }
     }
     return tabelaTemp;
+}
+
+Elemento* cria_elemento (void) {
+    return NULL;
+}
+
+
+/* inserção no início: retorna a lista atualizada */
+Elemento* insere_elemento (Elemento* elemento, Cliente cliente) {
+    Elemento* novoElemento = (Elemento*) malloc(sizeof(Elemento));
+    novoElemento->cliente = cliente;
+    novoElemento->proximo = elemento;
+    return novoElemento;
 }

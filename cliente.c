@@ -56,3 +56,11 @@ int tamanho() {
     return sizeof(int)  //cod
             + sizeof(char) * 100; //nome
 }
+
+Cliente cria_cliente(int cod, char* nome) {
+    Cliente cliente;
+    cliente.cod = cod;
+    cliente.nome = *nome;
+
+    return cliente;
+}

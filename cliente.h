@@ -25,4 +25,6 @@ Cliente *ler(FILE *in);
 // Retorna tamanho do funcionario em bytes
 int tamanho();
 
+Cliente cria_cliente(int cod, char* nome);
+
 #endif

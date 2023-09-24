@@ -20,5 +20,6 @@ int funcao_hash(int chave, int tamanho);
 TabelaHash* cria_tabela(int tamanho);
 TabelaHash* insere_cliente_na_tabela_hash(Cliente cliente);
 
+Elemento* cria_elemento();
 
 #endif
