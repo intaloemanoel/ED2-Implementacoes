@@ -25,6 +25,7 @@ Cliente *cliente(int cod, char *nome) {
     //copia valores para os campos de cliente
     cli->cod = cod;
     strcpy(cli->nome, nome);
+    cli->proximo = NULL;
 
     return cli;
 }
