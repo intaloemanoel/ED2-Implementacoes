@@ -7,35 +7,31 @@ int pos_hash(int chave, int tamanho){
     return chave % tamanho;
 }
 
-Cliente* inicializa_tabela(Cliente* Hash, int tamanho){
+void inicializa_tabela(Cliente* Hash[], int tamanho){
     for(int i = 0; i < tamanho; i++){
-    	Hash[i].proximo = NULL;
+    	Hash[i] = NULL;
     }
-
-    return Hash;
 }
 
-Cliente* insere_cliente(Cliente* cli, Cliente** Hash, int tamanho){
+void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho){
     int posHash = pos_hash(cli->cod, tamanho);
 
-    if(Hash[posHash]){
+    if(Hash[posHash] == NULL){
         Hash[posHash] = cli;
     } else{
         Cliente *temp = Hash[posHash];
 
-        while(temp->proximo){
+        while(temp->proximo != NULL){
             temp = temp->proximo;
         }
 
-        temp->proximo = cliente;
+        temp->proximo = cli;
     }
 
-    printf("Cliente foi inserido na posicao %d", posHash);
-
-    return Hash;
+    printf("Cliente foi inserido na posicao %d \n", posHash);
 }
 
-libera_tabela(Cliente** Hash, int tamanho){
+void libera_tabela(Cliente* Hash[], int tamanho){
     for(int i = 0; i < tamanho; i++){
         if(Hash[i]){
             Cliente* temp = Hash[i];
@@ -47,5 +43,20 @@ libera_tabela(Cliente** Hash, int tamanho){
                 free(tempDois);
             }
         }
+    }
+}
+
+void imprimir_tabela(Cliente* Hash[], int tamanho) {
+    printf("\nTabela Hash:\n");
+    for (int i = 0; i < tamanho; i++) {
+        printf("[%d]: ", i);
+
+        Cliente* temp = Hash[i];
+        while (temp) {
+            printf("[%d | %s] -> ", temp->cod, temp->nome);
+            temp = temp->proximo;
+        }
+
+        printf("NULL\n");
     }
 }

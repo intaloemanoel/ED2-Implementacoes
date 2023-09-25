@@ -7,10 +7,12 @@
 
 int pos_hash(int chave, int tamanho);
 
-Cliente* inicializa_tabela(Cliente* Hash, int tamanho);
+void inicializa_tabela(Cliente* Hash[], int tamanho);
 
-Cliente* insere_cliente(Cliente* cli, Cliente** Hash, int tamanho);
+void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho);
 
-void libera_tabela(Cliente** Hash, int tamanho);
+void libera_tabela(Cliente* Hash[], int tamanho);
+
+void imprimir_tabela(Cliente* Hash[], int tamanho);
 
 #endif
