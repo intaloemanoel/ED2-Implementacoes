@@ -16,12 +16,19 @@ void inserir(Cliente* Hash[], int tamanho){
     printf("✍️ Nome: ");
     scanf("%s", nome);
 
-    Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
-    cli = cliente(cod, nome);
-    printf("\nO seguinte cliente será inserido na tabela:\n");
-    imprimir(cli);
+    Cliente* pcli = buscar_cliente(Hash, cod, tamanho);
 
-    insere_cliente(cli, Hash, tamanho);
+    if(pcli == NULL){
+        Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
+        cli = cliente(cod, nome);
+        printf("\nO seguinte cliente será inserido na tabela:\n");
+        imprimir(cli);
+
+        insere_cliente(cli, Hash, tamanho);
+    } else{
+        printf("\n❌ ERRO: Já existe cliente com este código.\n");
+    }
+    
 }
 
 void buscar(Cliente* Hash[], int tamanho){
