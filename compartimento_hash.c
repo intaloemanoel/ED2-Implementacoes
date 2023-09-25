@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "cliente.h"
-#include "hash.h"
+#include "compartimento_hash.h"
 
 int pos_hash(int chave, int tamanho){
     return chave % tamanho;
@@ -29,6 +29,58 @@ void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho){
     }
 
     printf("Cliente foi inserido na posicao %d \n", posHash);
+}
+
+Cliente* buscar_cliente(Cliente* Hash[], int codigo, int tamanho){
+    int posHash = pos_hash(codigo, tamanho);
+
+    Cliente* pCli = Hash[posHash];
+    while (pCli != NULL){
+        if(pCli->cod == codigo){
+            return pCli;
+        }
+
+        pCli = pCli->proximo;
+    }
+
+    return NULL;
+}
+
+void remover_cliente(Cliente* Hash[], int codigo, int tamanho){
+    int posHash = pos_hash(codigo, tamanho);
+
+    Cliente* cli = buscar_cliente(Hash, codigo, tamanho);
+
+   if(cli != NULL){
+        printf("\n✅ Cliente de código %d foi encontrado:\n", codigo);
+        imprimir(cli);
+
+        Cliente* pCli = Hash[posHash];
+        Cliente* anterior = NULL;
+
+        while (pCli != NULL){
+            if(pCli->cod != codigo){
+                anterior = pCli;
+                pCli = pCli->proximo;
+            } else{
+                break;
+            }
+        }
+
+        if(anterior == NULL){
+            Hash[posHash] = pCli->proximo;
+            return;
+        } else{
+            anterior->proximo = pCli->proximo;
+        }
+        
+        free(pCli);
+        printf("\n✅ Cliente excluído\n");
+    }
+    else{
+        printf("❌ ERRO NA REMOÇÃO: Não foi encontrado este cliente na tabela.");
+        return;
+    }
 }
 
 void libera_tabela(Cliente* Hash[], int tamanho){

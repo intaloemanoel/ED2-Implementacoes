@@ -59,6 +59,7 @@
     "stdlib.h": "c",
     "stdarg.h": "c",
     "cliente.h": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "compartimento_hash.h": "c"
   }
 }

@@ -11,6 +11,10 @@ void inicializa_tabela(Cliente* Hash[], int tamanho);
 
 void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho);
 
+Cliente* buscar_cliente(Cliente* Hash[], int codigo, int tamanho);
+
+void remover_cliente(Cliente* Hash[], int codigo, int tamanho);
+
 void libera_tabela(Cliente* Hash[], int tamanho);
 
 void imprimir_tabela(Cliente* Hash[], int tamanho);

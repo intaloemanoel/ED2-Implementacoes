@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "cliente.h"
-#include "hash.h"
+#include "compartimento_hash.h"
 
 void inserir(Cliente* Hash[], int tamanho){
     int cod;
     char nome[100];
     
     printf("-------- INSERIR CLIENTE --------\n");
-    printf("Qual é o código do cliente?\n");
+    printf("Qual é o código do cliente que deseja inserir?\n");
     printf("🔢 Código: ");
     scanf("%d", &cod);
     
-    printf("Qual é o nome do cliente?\n");
-    printf("✍🏻 Nome: ");
+    printf("Qual é o nome do cliente que deseja inserir?\n");
+    printf("✍️ Nome: ");
     scanf("%s", nome);
 
     Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
@@ -23,6 +23,36 @@ void inserir(Cliente* Hash[], int tamanho){
 
     insere_cliente(cli, Hash, tamanho);
 }
+
+void buscar(Cliente* Hash[], int tamanho){
+    int cod;
+    
+    printf("-------- BUSCAR CLIENTE --------\n");
+    printf("Qual é o código do cliente que deseja buscar?\n");
+    printf("🔢 Código: ");
+    scanf("%d", &cod);
+    
+    Cliente* cli = buscar_cliente(Hash, cod, tamanho);
+
+    if(cli != NULL){
+        printf("\n✅ Cliente de código %d foi encontrado:\n", cod);
+        imprimir(cli);
+    } else{
+        printf("\n❌ Cliente de código %d não foi encontrado\n", cod);
+    }
+}
+
+void excluir(Cliente* Hash[], int tamanho){
+    int cod;
+    
+    printf("-------- REMOVER CLIENTE --------\n");
+    printf("Qual é o código do cliente que deseja remover?\n");
+    printf("🔢 Código: ");
+    scanf("%d", &cod);
+    
+    remover_cliente(Hash, cod, tamanho);
+}
+
 
 void main(int argc, char** argv) {
     FILE *out;
@@ -67,8 +97,10 @@ void main(int argc, char** argv) {
                 inserir(Hash, tamanho);
                 break;
             case 2:
+                buscar(Hash, tamanho);
                 break;
             case 3:
+                excluir(Hash, tamanho);
                 break;
             case 4:
                 imprimir_tabela(Hash, tamanho);
