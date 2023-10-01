@@ -13,19 +13,23 @@ void inicializa_tabela(Cliente* Hash[], int tamanho){
     }
 }
 
-void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho){
+void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho, FILE *out){
     int posHash = pos_hash(cli->cod, tamanho);
+    int posicao = 0;
 
     if(Hash[posHash] == NULL){
         Hash[posHash] = cli;
+        salvar(cli, out);
     } else{
         Cliente *temp = Hash[posHash];
 
         while(temp->proximo != NULL){
+            posicao = posicao + 1;
             temp = temp->proximo;
         }
 
         temp->proximo = cli;
+        sobrescreve_cliente_no_arquivo(out, posicao, temp);
     }
 
     printf("Cliente foi inserido na posicao %d \n", posHash);

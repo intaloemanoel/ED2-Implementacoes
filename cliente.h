@@ -26,4 +26,6 @@ Cliente *ler(FILE *in);
 // Retorna tamanho do funcionario em bytes
 int tamanho();
 
+void sobrescreve_cliente_no_arquivo(FILE *out, int posicao, cliente* cliente) ;
+
 #endif

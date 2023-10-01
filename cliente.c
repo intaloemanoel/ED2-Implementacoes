@@ -57,3 +57,21 @@ int tamanho() {
     return sizeof(int)  //cod
             + sizeof(char) * 100; //nome
 }
+
+void sobrescreve_cliente_no_arquivo(FILE *out, int posicao, cliente* cliente) {
+    printf("\n\nSobrescrevendo cliente do arquivo...\n\n");
+    //pula primeiros n registros para posicionar no início do quarto registro
+    fseek(out, tamanho() * posicao, SEEK_SET);
+    salva(cliente, out);
+    free(cliente);
+
+    //lê funcionário que acabou de ser gravado
+    //posiciona novamente o cursor no início desse registro
+    fseek(in, tamanho() * posicao, SEEK_SET);
+    Cliente* c = ler(out);
+    if (c != NULL) {
+        imprimir(c);
+        free(c);
+    }
+}
+
