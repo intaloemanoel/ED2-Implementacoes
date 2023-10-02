@@ -13,7 +13,7 @@ void imprimir(Cliente *cli) {
     printf("\n**********************************************\n");
 }
 
-// Cria cliente. Lembrar de usar free(cli)
+// Cria cliente.
 Cliente *cliente(int cod, char *nome) {
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 
@@ -34,7 +34,6 @@ Cliente *cliente(int cod, char *nome) {
 void salvar(Cliente *cli, FILE *out) {
     fwrite(&cli->cod, sizeof(int), 1, out);
 
-    //func->nome ao invés de &func->nome, pois string já é ponteiro
     fwrite(cli->nome, sizeof(char), sizeof(cli->nome), out);
 }
 
@@ -60,18 +59,17 @@ int tamanho() {
 
 void sobrescreve_cliente_no_arquivo(FILE *out, int posicao, cliente* cliente) {
     printf("\n\nSobrescrevendo cliente do arquivo...\n\n");
-    //pula primeiros n registros para posicionar no início do quarto registro
+    //pula primeiros n clientes para posicionar no início do cliente que ira subscrever
     fseek(out, tamanho() * posicao, SEEK_SET);
     salva(cliente, out);
     free(cliente);
 
-    //lê funcionário que acabou de ser gravado
-    //posiciona novamente o cursor no início desse registro
-    fseek(in, tamanho() * posicao, SEEK_SET);
+    //le cliente que acabou de ser gravado
+    //posiciona novamente o cursor no início desse cliente
+    fseek(out, tamanho() * posicao, SEEK_SET);
     Cliente* c = ler(out);
     if (c != NULL) {
         imprimir(c);
         free(c);
     }
 }
-
