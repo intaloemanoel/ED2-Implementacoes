@@ -13,19 +13,25 @@ void inicializa_tabela(Cliente* Hash[], int tamanho){
     }
 }
 
-void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho){
+void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho, FILE *out, FILE *outHash){
     int posHash = pos_hash(cli->cod, tamanho);
+    int posicao = 0;
 
     if(Hash[posHash] == NULL){
         Hash[posHash] = cli;
+        salvar_hash(posicao, outHash);
+        salvar(cli, out);
     } else{
         Cliente *temp = Hash[posHash];
 
         while(temp->proximo != NULL){
+            posicao = posicao + 1;
             temp = temp->proximo;
         }
 
         temp->proximo = cli;
+        sobrescreve_hash_no_arquivo(outHash, posHash, posicao)
+        sobrescreve_cliente_no_arquivo(out, posicao, temp);
     }
 
     printf("Cliente foi inserido na posicao %d \n", posHash);
@@ -111,4 +117,15 @@ void imprimir_tabela(Cliente* Hash[], int tamanho) {
 
         printf("NULL\n");
     }
+}
+
+void salvar_hash(int posicao, FILE *out) {
+    fwrite(posicao, sizeof(int), 1, out);
+}
+
+void sobrescreve_hash_no_arquivo(FILE *out, int posicaoHash, int posicao) {
+    printf("\n\nSobrescrevendo cliente no arquivo hash...\n\n");
+    //pula primeiros n registros para posicionar no início do quarto registro
+    fseek(out, sizeof(int) * posicaoHash, SEEK_SET);
+    salvar_hash(posicao, out);
 }

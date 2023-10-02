@@ -3,7 +3,7 @@
 #include "cliente.h"
 #include "compartimento_hash.h"
 
-void inserir(Cliente* Hash[], int tamanho){
+void inserir(Cliente* Hash[], int tamanho, FILE *out, FILE *outHash){
     int cod;
     char nome[100];
     
@@ -24,7 +24,7 @@ void inserir(Cliente* Hash[], int tamanho){
         printf("\nO seguinte cliente será inserido na tabela:\n");
         imprimir(cli);
 
-        insere_cliente(cli, Hash, tamanho);
+        insere_cliente(cli, Hash, tamanho, out, outHash);
     } else{
         printf("\n❌ ERRO: Já existe cliente com este código.\n");
     }
@@ -101,7 +101,7 @@ void main(int argc, char** argv) {
 
             switch (opcao){
             case 1:
-                inserir(Hash, tamanho);
+                inserir(Hash, tamanho, out, outHash);
                 break;
             case 2:
                 buscar(Hash, tamanho);
