@@ -18,10 +18,10 @@ Cliente *cliente(int cod, char *nome, int prox, bool status){
     return cli;
 }
 
-// Imprime funcionario
+// Imprime Cliente
 void imprime(Cliente *cli) {
     printf("\n**********************************************");
-    printf("\nFuncionario de Codigo: ");
+    printf("\nCliente de Codigo: ");
     printf("%d", cli->cod);
     printf("\nNome: ");
     printf("%s", cli->nome);
@@ -41,8 +41,8 @@ void salvar_cliente(Cliente *cli, FILE *out) {
 }
 
 
-// Le um funcionario do arquivo in na posicao atual do cursor
-// Retorna um ponteiro para funcionario lido do arquivo
+// Le um cliente do arquivo in na posicao atual do cursor
+// Retorna um ponteiro para cliente lido do arquivo
 Cliente *ler_cliente(FILE *in) {
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 

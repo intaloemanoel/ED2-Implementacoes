@@ -15,5 +15,6 @@ int ler_valorHash(FILE *tabHash);
 
 int ler_nPos(FILE *tabHash);
 
+void insere_cliente(Cliente* cliente, FILE* in, int tamanho);
 
 #endif

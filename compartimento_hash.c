@@ -62,7 +62,7 @@ int ler_valorHash(FILE *tabHash) {
 }
 
 int ler_nPos(FILE *tabHash, int pos) {
-    printf("\nLendo funcionário %d do arquivo...\n", pos);
+    printf("\nLendo cliente %d do arquivo...\n", pos);
 
     fseek(tabHash, pos * tamanho(), SEEK_SET); //cursor do tabHash na pos
     //PAREI AQUIII 
@@ -97,5 +97,59 @@ int buscar_cliente(FILE *tabHash, int tamanho, int tabHashPos, int clientePos){
     }
 
     //Cliente não está na tabela Hash
+    return -1;
+}
+
+void insere_cliente(Cliente* cliente, FILE* in, int tamanho){
+    //alexia comments: (linha de baixo) calcula a posicao hash, nao entendi o pq de fazer isso na main entao trouuxe pra ca
+    int posHash = pos_hash(cliente->cod, tamanho);
+    int posHashTemp;
+    int posicao = 0;
+    rewind(in);
+
+
+    Cliente *clienteTemp;
+    //alexia comments: (linha de baixo) estou considerando que iniciamos a leitura no inicio do arquivo
+    //alexia comments: (linha de baixo) lemos o primeiro cliente
+    while ((clienteTemp = ler_cliente(in)) != NULL) {
+        //alexia comments: (linha de baixo) verificamos se o posHash do que queremos adicionar é igual ao do que acabamos de ler
+        //alexia comments: pq  disso? para vermos se esse cliente tem haver com o que queremos criar
+        posHashTemp = pos_hash(clienteTemp->cod, tamanho);
+        if (pos_hash == posHashTemp) {
+            //alexia comments: sendo um cliente que tem haver com o que queremos adicionar, vericamos se esse ja tem proximo demarcado
+            if (clienteTemp->prox == -1) {
+                //alexia comments: ele vem para essa linha caso nao tenha, com isso
+                //alexia comments: (linha de baixo) setamos o ponteiro do arquivo para o inicio do cliente que encontra nessa posicao
+                fseek(in, tamanho() * posicao, SEEK_SET);
+                //alexia comments: (linha de baixo) colocamos o prox do cliente que lemos para passar a apontar para nosso novo cliente
+                clienteTemp->prox =
+                //alexia comments:(linha de baixo) salvamos esse cleinte que lemos novamente, porem dessa vez ele apontara para nosso mais novo cliente
+                salvar_cliente(clienteTemp, in);
+            }
+        }
+        posicao = posicao + 1;
+    }
+    //alexia comments: (linha de baixo) adicionamos o novo cliente no final do arquivo
+    salvar_cliente(cliente, in);
+}
+int get_arquivo_pos(FILE *in,int cod){
+    printf("\nPegando pos de %d...\n", cod);
+    rewind(in);
+
+    int i = 0;
+    Cliente *cli;
+    while ((cli = ler_cliente(in)) != NULL) {
+        if(cli->cod == cod){
+            printf("\nCliente %d está na posicao %d\n", cod, i);
+            imprime(cli);
+            free(cli);
+            return i;
+        }
+        else{
+            i++;
+            free(cli);
+        }
+    }
+
     return -1;
 }

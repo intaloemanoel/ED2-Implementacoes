@@ -16,9 +16,28 @@ void inserir(FILE *tabHash, FILE *cliente, int tamanho){
     printf("✍️ Nome: ");
     scanf("%s", nome);
 
+    //alexia comments: começando pelo o que eu entendi que vc esta fazendo
+
     //Verificar se o cliente já está inserido
     int tabHashPos = pos_hash(cod, tamanho); //Pegar a posição na tabela Hash
+    //alexia comments: na linha abaixo vc verifica se o cliente ja esta na tabela, ao meu ver, se ja esta nao precisamos inserir
     int clientePos = get_arquivo_pos(tabHash, cod); //Pegar a posição no arquivo de clientes
+
+    //alexia comments: se a funcao da linha 24 nao encontra o cliente na tabela hash ele retorna -1 por isso do if
+    //alexia comments: se for -1 nao esta na tabela e vamos inserir, caso contrario ja esta na tabela
+    if (clientePos == -1) {
+        //alexia comments: (linha de baixo) inicia o ponteiro do novo cliente
+        Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
+        //alexia comments: (linha de baixo) cria o cliente
+        cli = cliente(cod, nome, -1, false);
+        printf("\nO seguinte cliente será inserido na tabela:\n");
+        imprime(cli);
+        //alexia comments:(linha de baixo) inicia o fluxo de inserir o novo cliente
+        insere_cliente(cli, tabHash, tamanho;)
+
+    } else {
+        printf("\n❌ ERRO: Já existe cliente com este código.\n");
+    }
 
 
     /*
@@ -86,6 +105,7 @@ void main(int argc, char** argv) {
 
             switch (opcao){
             case 1:
+                inserir(outClientes, tamanhoTabela);
                 break;
             case 2:
                 break;
