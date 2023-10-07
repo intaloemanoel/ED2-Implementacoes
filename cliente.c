@@ -1,59 +1,66 @@
 #include "cliente.h"
-#include <string.h>
 #include <stdlib.h>
-#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
-// Imprime cliente
-void imprimir(Cliente *cli) {
-    printf("**********************************************");
-    printf("\nCliente de código ");
-    printf("%d", cli->cod);
-    printf("\nNome: ");
-    printf("%s", cli->nome);
-    printf("\n**********************************************\n");
-}
-
-// Cria cliente. Lembrar de usar free(cli)
-Cliente *cliente(int cod, char *nome) {
+Cliente *cliente(int cod, char *nome, int prox, bool status){
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 
-    //inicializa espaço de memória com ZEROS
     if (cli){
         memset(cli, 0, sizeof(Cliente));
     }
 
-    //copia valores para os campos de cliente
     cli->cod = cod;
     strcpy(cli->nome, nome);
-    cli->proximo = NULL;
-
+    cli->prox = prox;
+    cli->status = status;
     return cli;
 }
 
-// Salva cliente no arquivo out, na posicao atual do cursor
-void salvar(Cliente *cli, FILE *out) {
-    fwrite(&cli->cod, sizeof(int), 1, out);
-
-    //func->nome ao invés de &func->nome, pois string já é ponteiro
-    fwrite(cli->nome, sizeof(char), sizeof(cli->nome), out);
+// Imprime funcionario
+void imprime(Cliente *cli) {
+    printf("\n**********************************************");
+    printf("\nFuncionario de Codigo: ");
+    printf("%d", cli->cod);
+    printf("\nNome: ");
+    printf("%s", cli->nome);
+    printf("\nPROXIMO CLIENTE: ");
+    printf("%d", cli->prox);
+    printf("\nSTATUS: ");
+    printf("%d", cli->status);
+    printf("\n**********************************************\n");
 }
 
-// Le um cliente do arquivo in na posicao atual do cursor
-// Retorna um ponteiro para o cliente lido do arquivo
-Cliente *ler(FILE *in) {
+// Salva cliente no arquivo out, na posicao atual do cursor
+void salvar_cliente(Cliente *cli, FILE *out) {
+    fwrite(&cli->cod, sizeof(int), 1, out);
+    fwrite(cli->nome, sizeof(char), sizeof(cli->nome), out);
+    fwrite(&cli->prox, sizeof(int), 1, out);
+    fwrite(&cli->status, sizeof(bool), 1, out);
+}
+
+
+// Le um funcionario do arquivo in na posicao atual do cursor
+// Retorna um ponteiro para funcionario lido do arquivo
+Cliente *ler_cliente(FILE *in) {
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 
     if (0 >= fread(&cli->cod, sizeof(int), 1, in)) {
         free(cli);
         return NULL;
     }
-
+    
     fread(cli->nome, sizeof(char), sizeof(cli->nome), in);
+    fread(&cli->prox, sizeof(int), 1, in);
+    fread(&cli->status, sizeof(bool), 1, in);
     return cli;
 }
 
-// Retorna tamanho do cliente em bytes
+// Retorna tamanho do clientepai em bytes
 int tamanho() {
-    return sizeof(int)  //cod
-            + sizeof(char) * 100; //nome
+    return sizeof(int)
+            + sizeof(char) * 100 
+            + sizeof(int)
+            + sizeof(bool);
 }

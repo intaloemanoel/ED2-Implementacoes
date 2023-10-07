@@ -3,127 +3,78 @@
 #include "cliente.h"
 #include "compartimento_hash.h"
 
-void inserir(Cliente* Hash[], int tamanho){
-    int cod;
-    char nome[100];
-    
-    printf("-------- INSERIR CLIENTE --------\n");
-    printf("Qual é o código do cliente que deseja inserir?\n");
-    printf("🔢 Código: ");
-    scanf("%d", &cod);
-    
-    printf("Qual é o nome do cliente que deseja inserir?\n");
-    printf("✍️ Nome: ");
-    scanf("%s", nome);
-
-    Cliente* pcli = buscar_cliente(Hash, cod, tamanho);
-
-    if(pcli == NULL){
-        Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
-        cli = cliente(cod, nome);
-        printf("\nO seguinte cliente será inserido na tabela:\n");
-        imprimir(cli);
-
-        insere_cliente(cli, Hash, tamanho);
-    } else{
-        printf("\n❌ ERRO: Já existe cliente com este código.\n");
-    }
-    
-}
-
-void buscar(Cliente* Hash[], int tamanho){
-    int cod;
-    
-    printf("-------- BUSCAR CLIENTE --------\n");
-    printf("Qual é o código do cliente que deseja buscar?\n");
-    printf("🔢 Código: ");
-    scanf("%d", &cod);
-    
-    Cliente* cli = buscar_cliente(Hash, cod, tamanho);
-
-    if(cli != NULL){
-        printf("\n✅ Cliente de código %d foi encontrado:\n", cod);
-        imprimir(cli);
-    } else{
-        printf("\n❌ Cliente de código %d não foi encontrado\n", cod);
+void le_clientes(FILE *in) {
+    printf("\n\nLendo clientes do arquivo...\n\n");
+    rewind(in);
+    Cliente *cli;
+    while ((cli = ler_cliente(in)) != NULL) {
+        imprime(cli);
+        free(cli);
     }
 }
 
-void excluir(Cliente* Hash[], int tamanho){
-    int cod;
-    
-    printf("-------- REMOVER CLIENTE --------\n");
-    printf("Qual é o código do cliente que deseja remover?\n");
-    printf("🔢 Código: ");
-    scanf("%d", &cod);
-    
-    remover_cliente(Hash, cod, tamanho);
-}
+void get_arquivo_pos(FILE *in,int cod){
+    printf("\n\nPegando pos de %d...\n\n", cod);
+    rewind(in);
 
+    int i = 0;
+    Cliente *cli;
+    while ((cli = ler_cliente(in)) != NULL) {
+        if(cli->cod == cod){
+            printf("\nSou a posicao: %d\n", i);
+            imprime(cli);
+            break;
+        }
+        else{
+            i++;
+            free(cli);
+        }
+    }
+}
 
 void main(int argc, char** argv) {
-    FILE *out;
-    FILE *outHash;
+    //Declara ponteiro para arquivo
+    FILE *outClientes;
+    FILE *outTabHash;
 
-    if ((out = fopen("cliente.dat", "w+b")) == NULL || (outHash = fopen("tabHash.dat", "w+b")) == NULL) {
-        printf("Erro ao abrir os arquivos\n");
-        exit(1);
-    } else {
-        int tamanho;
+    outClientes = fopen("clientes.dat", "r+b");
+    outTabHash = fopen("tabHash.dat", "r+b");
 
-        printf("-------- TABELA HASH - ENCADEAMENTO EXTERNO --------\n");
-        printf("-------- ALEXIA ASSUMPÇÃO, ÍTALO EMANOEL E GUILHERME --------\n");
-        printf("Qual será o tamanho da tabela hash?\n");
-        printf("📏 Tamanho ");
-        scanf("%d", &tamanho);
-
-        Cliente* Hash[tamanho];
-        inicializa_tabela(Hash, tamanho);
-
-        int menu = 1;
-        int opcao;
-        while(menu == 1){
-            printf("\n-------- MENU --------\n");
-            printf("O que você deseja fazer?\n");
-            printf("1 - ➕ Inserir Cliente\n");
-            printf("2 - 🔍 Buscar Cliente\n");
-            printf("3 - ❌ Remover Cliente\n");
-            printf("4 - 🖨️ Imprimir tabela hash\n");
-            printf("5 - 👋 Sair\n");
-            printf("Opção: ");
-            scanf("%d", &opcao);
-            printf("\n");
-
-            if(opcao < 1 || opcao > 6){
-                printf("%d não é valido. Por favor, utilize uma das opções abaixo.\n", opcao);
-                continue;
-            }
-
-            switch (opcao){
-            case 1:
-                inserir(Hash, tamanho);
-                break;
-            case 2:
-                buscar(Hash, tamanho);
-                break;
-            case 3:
-                excluir(Hash, tamanho);
-                break;
-            case 4:
-                imprimir_tabela(Hash, tamanho);
-                break;
-            case 5:
-                libera_tabela(Hash, tamanho);
-                printf("🧹 Liberando a tabela hash...\n");
-                printf("✅ Execução concluida\n");
-                exit(1);
-                break;
-            }
+    // Verifica se o arquivo clientes foi aberto com sucesso.
+    if (outClientes == NULL) {
+        // Se o arquivo não existir, ele será criado.
+        outClientes = fopen("clientes.dat", "w+b");
+        if (outClientes == NULL) {
+            printf("Erro ao criar o arquivo de Clientes.\n");
+            exit(1);
         }
-
-        fclose(out);    
     }
 
+    // Verifica se o arquivo tabela Hash foi aberto com sucesso.
+    if (outTabHash == NULL) {
+        // Se o arquivo não existir, ele será criado.
+        outTabHash = fopen("tabHash.dat", "w+b");
+        if (outTabHash == NULL) {
+            printf("Erro ao criar o arquivo de Tabela Hash.\n");
+            exit(1);
+        }
+    }
+
+    int tamanhoTabela = inicializa_tabela(outTabHash);
 
 
+        /*
+        Cliente *cli = cliente(1,"Alexia", -1, true);
+        Cliente *cliUm = cliente(2,"Italo", 0, true);
+        salvar_cliente(cli, out);
+        salvar_cliente(cliUm, out);
+        free(cli);
+        free(cliUm);*/
+
+        //le_clientes(out);
+        //get_arquivo_pos(out, 2);
+        
+    fclose(outClientes);
+    fclose(outTabHash); 
 }
+

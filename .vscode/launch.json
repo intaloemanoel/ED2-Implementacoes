@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "g:/My Drive/Faculdade/2023-2/EDII/ED2-encadeamento-exterior",
-      "program": "g:/My Drive/Faculdade/2023-2/EDII/ED2-encadeamento-exterior/build/Debug/outDebug",
+      "cwd": "g:/My Drive/Faculdade/2023-2/EDII/ImpUm",
+      "program": "g:/My Drive/Faculdade/2023-2/EDII/ImpUm/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

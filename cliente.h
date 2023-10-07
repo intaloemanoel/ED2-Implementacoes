@@ -3,27 +3,30 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
 typedef struct Cliente {
     int cod;
     char nome[100];
-    struct Cliente *proximo;
+    int prox;
+    bool status;
 } Cliente;
 
-// Imprime funcionario
-void imprimir(Cliente *cli);
+// Cria cliente. Lembrar de usar free(cliente)
+Cliente *cliente(int cod, char *nome, int prox, bool status);
 
-// Cria funcionario. Lembrar de usar free(funcionario)
-Cliente *cliente(int cod, char *nome);
+// Imprime Cliente
+void imprime(Cliente *cli);
 
-// Salva funcionario no arquivo out, na posicao atual do cursor
-void salvar(Cliente *cli, FILE *out);
+// Salva cliente no arquivo out, na posicao atual do cursor
+void salvar_cliente(Cliente *cli, FILE *out);
 
-// Le um funcionario do arquivo in na posicao atual do cursor
-// Retorna um ponteiro para funcionario lido do arquivo
-Cliente *ler(FILE *in);
+// Le um cliente do arquivo in na posicao atual do cursor
+// Retorna um ponteiro para cliente lido do arquivo
+Cliente *ler_cliente(FILE *in);
 
-// Retorna tamanho do funcionario em bytes
+// Retorna tamanho do cliente em bytes
 int tamanho();
 
 #endif
