@@ -57,6 +57,38 @@ Cliente *ler_cliente(FILE *in) {
     return cli;
 }
 
+void le_clientes(FILE *in) {
+    printf("\n\nLendo clientes do arquivo...\n\n");
+    rewind(in);
+    Cliente *cli;
+    while ((cli = ler_cliente(in)) != NULL) {
+        imprime(cli);
+        free(cli);
+    }
+}
+
+int get_arquivo_pos(FILE *in,int cod){
+    printf("\nPegando pos de %d...\n", cod);
+    rewind(in);
+
+    int i = 0;
+    Cliente *cli;
+    while ((cli = ler_cliente(in)) != NULL) {
+        if(cli->cod == cod){
+            printf("\nCliente %d está na posicao %d\n", cod, i);
+            imprime(cli);
+            free(cli);
+            return i;
+        }
+        else{
+            i++;
+            free(cli);
+        }
+    }
+
+    return -1;
+}
+
 // Retorna tamanho do clientepai em bytes
 int tamanho() {
     return sizeof(int)

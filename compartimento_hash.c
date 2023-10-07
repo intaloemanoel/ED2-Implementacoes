@@ -44,7 +44,7 @@ int imprime_tabela(FILE *tabHash){
     int cliCod;
     int tamanhoTabela = 0;
     while ((cliCod = ler_valorHash(tabHash)) != -2) {
-        printf("[%d] %d \n", tamanhoTabela, cliCod);
+        printf("[%d]: %d \n", tamanhoTabela, cliCod);
         tamanhoTabela++;
     }
 
@@ -59,4 +59,43 @@ int ler_valorHash(FILE *tabHash) {
     }
 
     return cliCod;
+}
+
+int ler_nPos(FILE *tabHash, int pos) {
+    printf("\nLendo funcionário %d do arquivo...\n", pos);
+
+    fseek(tabHash, pos * tamanho(), SEEK_SET); //cursor do tabHash na pos
+    //PAREI AQUIII 
+    //AGORA É LER 
+}
+
+int buscar_cliente(FILE *tabHash, int tamanho, int tabHashPos, int clientePos){
+    rewind(tabHash);
+
+    Cliente* pCli;
+    CLIENTE POS NOVO = ler_cliente(tabHash, tabHashPos); 
+    IF(CLIENTE POS NOVO = CLIENTE POS){
+        EXISTE NA PRIMEIRA POS
+    }
+    VASCULHAR OS PRÓXIMOS DESTE PRIMEIRO E VER SE TEM O CLIENTEPOS
+
+    /*
+    Cliente* pCli = Hash[posHash];
+    while (pCli != NULL){
+        if(pCli->cod == codigo){
+            return pCli;
+        }
+
+        pCli = pCli->proximo;
+    }*/
+
+    int cliCod;
+    int tamanhoTabela = 0;
+    while ((cliCod = ler_valorHash(tabHash)) != -2) {
+        printf("[%d]: %d \n", tamanhoTabela, cliCod);
+        tamanhoTabela++;
+    }
+
+    //Cliente não está na tabela Hash
+    return -1;
 }

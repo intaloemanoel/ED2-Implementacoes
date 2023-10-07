@@ -3,33 +3,36 @@
 #include "cliente.h"
 #include "compartimento_hash.h"
 
-void le_clientes(FILE *in) {
-    printf("\n\nLendo clientes do arquivo...\n\n");
-    rewind(in);
-    Cliente *cli;
-    while ((cli = ler_cliente(in)) != NULL) {
-        imprime(cli);
-        free(cli);
-    }
-}
+void inserir(FILE *tabHash, FILE *cliente, int tamanho){
+    int cod;
+    char nome[100];
+    
+    printf("-------- INSERIR CLIENTE --------\n");
+    printf("Qual é o código do cliente que deseja inserir?\n");
+    printf("🔢 Código: ");
+    scanf("%d", &cod);
+    
+    printf("Qual é o nome do cliente que deseja inserir?\n");
+    printf("✍️ Nome: ");
+    scanf("%s", nome);
 
-void get_arquivo_pos(FILE *in,int cod){
-    printf("\n\nPegando pos de %d...\n\n", cod);
-    rewind(in);
+    //Verificar se o cliente já está inserido
+    int tabHashPos = pos_hash(cod, tamanho); //Pegar a posição na tabela Hash
+    int clientePos = get_arquivo_pos(tabHash, cod); //Pegar a posição no arquivo de clientes
 
-    int i = 0;
-    Cliente *cli;
-    while ((cli = ler_cliente(in)) != NULL) {
-        if(cli->cod == cod){
-            printf("\nSou a posicao: %d\n", i);
-            imprime(cli);
-            break;
-        }
-        else{
-            i++;
-            free(cli);
-        }
-    }
+
+    /*
+    if(cliente != -1){
+        Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
+        cli = cliente(cod, nome);
+        printf("\nO seguinte cliente será inserido na tabela:\n");
+        imprimir(cli);
+
+        insere_cliente(cli, Hash, tamanho, out, outHash);
+    } else{
+        printf("\n❌ ERRO: Já existe cliente com este código.\n");
+    }*/
+    
 }
 
 void main(int argc, char** argv) {
@@ -62,8 +65,45 @@ void main(int argc, char** argv) {
 
     int tamanhoTabela = inicializa_tabela(outTabHash);
 
+    int menu = 1;
+        int opcao;
+        while(menu == 1){
+            printf("\n-------- MENU --------\n");
+            printf("O que você deseja fazer?\n");
+            printf("1 - ➕ Inserir Cliente\n");
+            printf("2 - 🔍 Buscar Cliente\n");
+            printf("3 - ❌ Remover Cliente\n");
+            printf("4 - 🖨️ Imprimir tabela hash\n");
+            printf("5 - 👋 Sair\n");
+            printf("Opção: ");
+            scanf("%d", &opcao);
+            printf("\n");
 
-        /*
+            if(opcao < 1 || opcao > 6){
+                printf("%d não é valido. Por favor, utilize uma das opções abaixo.\n", opcao);
+                continue;
+            }
+
+            switch (opcao){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                printf("✅ Execução concluida\n");
+                fclose(outClientes);
+                fclose(outTabHash); 
+                exit(1);
+                break;
+            }
+        }
+}
+
+/*
         Cliente *cli = cliente(1,"Alexia", -1, true);
         Cliente *cliUm = cliente(2,"Italo", 0, true);
         salvar_cliente(cli, out);
@@ -72,9 +112,5 @@ void main(int argc, char** argv) {
         free(cliUm);*/
 
         //le_clientes(out);
-        //get_arquivo_pos(out, 2);
-        
-    fclose(outClientes);
-    fclose(outTabHash); 
-}
+        //get_arquivo_pos(out, 2); */
 

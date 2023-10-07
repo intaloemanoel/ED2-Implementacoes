@@ -26,6 +26,10 @@ void salvar_cliente(Cliente *cli, FILE *out);
 // Retorna um ponteiro para cliente lido do arquivo
 Cliente *ler_cliente(FILE *in);
 
+void le_clientes(FILE *in);
+
+int get_arquivo_pos(FILE *in,int cod);
+
 // Retorna tamanho do cliente em bytes
 int tamanho();
 

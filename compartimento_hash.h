@@ -13,5 +13,7 @@ int imprime_tabela(FILE *tabHash);
 
 int ler_valorHash(FILE *tabHash);
 
+int ler_nPos(FILE *tabHash);
+
 
 #endif
