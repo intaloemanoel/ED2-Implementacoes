@@ -1,11 +1,9 @@
 .vscode
 
-<<<<<<< Updated upstream
 .idea
-=======
+
 *.dat
 
 *.o
 
 impUm
->>>>>>> Stashed changes
