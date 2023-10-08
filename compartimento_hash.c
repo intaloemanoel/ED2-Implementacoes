@@ -131,7 +131,7 @@ void insere_cliente(FILE* tabHash, FILE* clientes, char nome[], int cod, int tam
     else{
         Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
         cli = cliente(cod, nome, -1, false);
-        salvar_cliente(cli, clientes, -1);
+        salvar_cliente(cli, clientes, posCliente);
 
         bool exit = true;
         while(exit == true){
@@ -164,11 +164,11 @@ void excluir_cliente(FILE* tabHash, FILE* clientes, int cod, int tamanho){
     int atual = ler_valorHash(tabHash);
     int anterior = -1;
     Cliente* pCli;
-    Cliente* cliTemp;
+    Cliente* cliAtual;
 
     bool exit = true;
     while(exit == true){
-        fseek(clientes, atual * tamanho_cliente(), SEEK_SET);
+        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
         pCli = ler_cliente(clientes);
 
         if(pCli->cod != cod){  
@@ -181,29 +181,29 @@ void excluir_cliente(FILE* tabHash, FILE* clientes, int cod, int tamanho){
     }
 
     if(anterior == -1){
-        fseek(clientes, atual * tamanho_cliente(), SEEK_SET);
-        cliTemp = ler_cliente(clientes);
-        cliTemp->status = true; //Libera cliente no arquivo cliente
-        salvar_cliente(cliTemp, clientes, atual);
-
-        salvar_tabHash(tabHash, cliTemp->prox, posHash);
-        printf("✅ O cliente de código %d foi excluido\n", cliTemp->cod);
-        free(cliTemp);
-        return;
-    }
-    else{
-        fseek(clientes, atual * tamanho_cliente(), SEEK_SET);
-        Cliente* cliAtual = ler_cliente(clientes);
+        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        cliAtual = ler_cliente(clientes);
         cliAtual->status = true; //Libera cliente no arquivo cliente
         salvar_cliente(cliAtual, clientes, atual);
 
-        fseek(clientes, anterior * tamanho_cliente(), SEEK_SET);
-        cliTemp = ler_cliente(clientes);
+        salvar_tabHash(tabHash, cliAtual->prox, posHash);
+        printf("✅ O cliente de código %d foi excluido\n", cliAtual->cod);
+        free(cliAtual);
+        return;
+    }
+    else{
+        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        cliAtual = ler_cliente(clientes);
+        cliAtual->status = true; //Libera cliente no arquivo cliente
+        salvar_cliente(cliAtual, clientes, atual);
+
+        fseek(clientes, anterior * tamanhoCliente(), SEEK_SET);
+        Cliente* cliTemp = ler_cliente(clientes);
         cliTemp->prox = cliAtual->prox;
         salvar_cliente(cliTemp, clientes, anterior);
 
         salvar_tabHash(tabHash, anterior, posHash);
-        printf("✅ O cliente de código %d foi excluido\n", cliTemp->cod);
+        printf("✅ O cliente de código %d foi excluido\n", cliAtual->cod);
         free(cliAtual);
         free(cliTemp);
     }
