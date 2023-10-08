@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+// Cria cliente. Lembrar de usar free(cliente)
 Cliente *cliente(int cod, char *nome, int prox, bool status){
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 
@@ -18,7 +19,7 @@ Cliente *cliente(int cod, char *nome, int prox, bool status){
     return cli;
 }
 
-// Imprime funcionario
+// Imprime cliente
 void imprime(Cliente *cli) {
     printf("\n**********************************************");
     printf("\nCliente de Codigo: %d", cli->cod);
@@ -36,7 +37,7 @@ void salvar_cliente(Cliente *cli, FILE *out, int pos) {
     }
     else{
         //Sobrescrever o arquivo na posicao pos
-        fseek(out, pos * tamanhoCliente(), SEEK_SET);
+        fseek(out, pos * tamanho_cliente(), SEEK_SET);
     }
     
     fwrite(&cli->cod, sizeof(int), 1, out);
@@ -46,8 +47,8 @@ void salvar_cliente(Cliente *cli, FILE *out, int pos) {
 }
 
 
-// Le um funcionario do arquivo in na posicao atual do cursor
-// Retorna um ponteiro para funcionario lido do arquivo
+// Le um cliente do arquivo in na posicao atual do cursor
+// Retorna um ponteiro para cliente lido do arquivo
 Cliente *ler_cliente(FILE *in) {
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 
@@ -62,7 +63,8 @@ Cliente *ler_cliente(FILE *in) {
     return cli;
 }
 
-void le_clientes(FILE *in) {
+//Le todos os clientes do arquivo
+void ler_clientes(FILE *in) {
     printf("\nLendo clientes do arquivo...\n");
     rewind(in);
 
@@ -77,6 +79,7 @@ void le_clientes(FILE *in) {
     }
 }
 
+//Pega a posicao do cliente no arquivo
 int arquivo_pos(FILE *in, int cod){
     rewind(in);
 
@@ -98,8 +101,8 @@ int arquivo_pos(FILE *in, int cod){
     return -1;
 }
 
-// Retorna tamanho do clientepai em bytes
-int tamanhoCliente() {
+// Retorna tamanho do cliente em bytes
+int tamanho_cliente() {
     return sizeof(int)
             + sizeof(char) * 100 
             + sizeof(int)

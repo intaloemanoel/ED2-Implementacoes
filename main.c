@@ -140,7 +140,7 @@ void main(int argc, char** argv) {
                 imprime_tabela(outTabHash);
                 break;
             case 5:
-                le_clientes(outClientes);
+                ler_clientes(outClientes);
                 break;
             case 6:
                 printf("✅ Execução concluida\n");

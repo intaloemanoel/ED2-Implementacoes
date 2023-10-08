@@ -1,14 +1,27 @@
 # ED2-encadeamento-exterior
 Trabalho de Implementação relacionado a disciplina Estrutura de Dados 2 na Universidade Federal Rural do Rio de Janeiro período 2023.2 - Encadeamento Exterior.
 
+## Grupo
+Alexia Assumpção, Ítalo Emanoel E Guilherme Lobo.
+
 ## Como executar
 - `Passo 1:` Execute o comando a seguir no seu terminal:
 ```
 make
 ```
+Esse comando executa todos os comandos relacionados a compilação do projeto e cria o arquivo executável `impUm`.
+
 - `Passo 2:` Execute o comando a seguir em seu terminal:
 ```
 ./impUm
+```
+Esse comando executa o arquivo executável.
+
+## Outros comandos
+Existem outros comandos configurados no arquivo `Makefile` que podem ser uteis.
+- Comando para remover todos os arquivos de input/output
+```
+make clean
 ```
 
 ## Dependencias
