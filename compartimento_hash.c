@@ -168,7 +168,7 @@ void excluir_cliente(FILE* tabHash, FILE* clientes, int cod, int tamanho){
 
     bool exit = true;
     while(exit == true){
-        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        fseek(clientes, atual * tamanho_cliente(), SEEK_SET);
         pCli = ler_cliente(clientes);
 
         if(pCli->cod != cod){  
@@ -181,7 +181,7 @@ void excluir_cliente(FILE* tabHash, FILE* clientes, int cod, int tamanho){
     }
 
     if(anterior == -1){
-        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        fseek(clientes, atual * tamanho_cliente(), SEEK_SET);
         cliAtual = ler_cliente(clientes);
         cliAtual->status = true; //Libera cliente no arquivo cliente
         salvar_cliente(cliAtual, clientes, atual);
@@ -192,12 +192,12 @@ void excluir_cliente(FILE* tabHash, FILE* clientes, int cod, int tamanho){
         return;
     }
     else{
-        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        fseek(clientes, atual * tamanho_cliente(), SEEK_SET);
         cliAtual = ler_cliente(clientes);
         cliAtual->status = true; //Libera cliente no arquivo cliente
         salvar_cliente(cliAtual, clientes, atual);
 
-        fseek(clientes, anterior * tamanhoCliente(), SEEK_SET);
+        fseek(clientes, anterior * tamanho_cliente(), SEEK_SET);
         Cliente* cliTemp = ler_cliente(clientes);
         cliTemp->prox = cliAtual->prox;
         salvar_cliente(cliTemp, clientes, anterior);
