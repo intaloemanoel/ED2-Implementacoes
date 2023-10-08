@@ -7,125 +7,198 @@ int pos_hash(int chave, int tamanho){
     return chave % tamanho;
 }
 
-void inicializa_tabela(Cliente* Hash[], int tamanho){
-    for(int i = 0; i < tamanho; i++){
-    	Hash[i] = NULL;
-    }
-}
+int inicializa_tabela(FILE* tabHash){
+    printf("🔄️ Carregando arquivo tabela Hash...\n");
+    rewind(tabHash);
 
-void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho, FILE *out, FILE *outHash){
-    int posHash = pos_hash(cli->cod, tamanho);
-    int posicao = 0;
-
-    if(Hash[posHash] == NULL){
-        Hash[posHash] = cli;
-        salvar_hash(posicao, outHash);
-        salvar(cli, out);
-    } else{
-        Cliente *temp = Hash[posHash];
-
-        while(temp->proximo != NULL){
-            posicao = posicao + 1;
-            temp = temp->proximo;
-        }
-
-        temp->proximo = cli;
-        sobrescreve_hash_no_arquivo(outHash, posHash, posicao)
-        sobrescreve_cliente_no_arquivo(out, posicao, temp);
-    }
-
-    printf("Cliente foi inserido na posicao %d \n", posHash);
-}
-
-Cliente* buscar_cliente(Cliente* Hash[], int codigo, int tamanho){
-    int posHash = pos_hash(codigo, tamanho);
-
-    Cliente* pCli = Hash[posHash];
-    while (pCli != NULL){
-        if(pCli->cod == codigo){
-            return pCli;
-        }
-
-        pCli = pCli->proximo;
-    }
-
-    return NULL;
-}
-
-void remover_cliente(Cliente* Hash[], int codigo, int tamanho){
-    int posHash = pos_hash(codigo, tamanho);
-
-    Cliente* cli = buscar_cliente(Hash, codigo, tamanho);
-
-   if(cli != NULL){
-        printf("\n✅ Cliente de código %d foi encontrado:\n", codigo);
-        imprimir(cli);
-
-        Cliente* pCli = Hash[posHash];
-        Cliente* anterior = NULL;
-
-        while (pCli != NULL){
-            if(pCli->cod != codigo){
-                anterior = pCli;
-                pCli = pCli->proximo;
-            } else{
-                break;
-            }
-        }
-
-        if(anterior == NULL){
-            Hash[posHash] = pCli->proximo;
-            return;
-        } else{
-            anterior->proximo = pCli->proximo;
-        }
-        
-        free(pCli);
-        printf("\n✅ Cliente excluído\n");
+    int cliCod;
+    int tamanhoTabela;
+    
+    if (0 != fread(&cliCod, sizeof(int), 1, tabHash)) {
+        printf("Reutilizando tabela Hash do diretório atual:\n");
+        tamanhoTabela = imprime_tabela(tabHash);
+        return tamanhoTabela;
     }
     else{
-        printf("❌ ERRO NA REMOÇÃO: Não foi encontrado este cliente na tabela.");
-        return;
+        printf("Criando nova tabela Hash\n");
+        printf("Qual será o tamanho da tabela hash?\n");
+        printf("📏 Tamanho ");
+        scanf("%d", &tamanhoTabela);
+    
+
+        int cliNull = -1;
+        for(int i = 0; i < tamanhoTabela; i++){
+            fwrite(&cliNull, sizeof(int), 1, tabHash);
+        }
+
+        printf("\nTabela Hash inicializada com tamanho %d\n", tamanhoTabela);
     }
+
+    return tamanhoTabela;
 }
 
-void libera_tabela(Cliente* Hash[], int tamanho){
-    for(int i = 0; i < tamanho; i++){
-        if(Hash[i]){
-            Cliente* temp = Hash[i];
-            Cliente* tempDois;
+void salvar_tabHash(FILE *out, int cli, int pos){
+    rewind(out);
+    
+    fseek(out, pos * sizeof(int), SEEK_SET);
+    
+    fwrite(&cli, sizeof(int), 1, out);
+}
 
-            while(temp){
-                tempDois = temp;
-                temp = temp->proximo;
-                free(tempDois);
+int imprime_tabela(FILE *tabHash){
+    rewind(tabHash);
+
+    int cliCod;
+    int tamanhoTabela = 0;
+    while ((cliCod = ler_valorHash(tabHash)) != -2) {
+        printf("[%d]: %d \n", tamanhoTabela, cliCod);
+        tamanhoTabela++;
+    }
+
+    return tamanhoTabela;
+}
+
+int ler_valorHash(FILE *tabHash) {
+    int cliCod;
+
+    if (0 >= fread(&cliCod, sizeof(int), 1, tabHash)) {
+        return -2;
+    }
+
+    return cliCod;
+}
+
+int busca_cliente_tabelaHash(FILE *clientes, int cod){
+    rewind(clientes);
+
+    int i = 0;
+    Cliente *cli;
+    while ((cli = ler_cliente(clientes)) != NULL) {
+        if(cli->cod == cod){
+            if(cli->status == false){
+                free(cli);
+                //Cliente existe e esta atualmente na tabela hash
+                return cod;
+            }
+            else{
+                free(cli);
+                //Cliente existe no arquivo mas foi liberado
+                return -2;
             }
         }
-    }
-}
-
-void imprimir_tabela(Cliente* Hash[], int tamanho) {
-    printf("\nTabela Hash:\n");
-    for (int i = 0; i < tamanho; i++) {
-        printf("[%d]: ", i);
-
-        Cliente* temp = Hash[i];
-        while (temp) {
-            printf("[%d | %s] -> ", temp->cod, temp->nome);
-            temp = temp->proximo;
+        else{
+            i++;
+            free(cli);
         }
+    }
 
-        printf("NULL\n");
+    //Nao existe entao retorna -1
+    return -1;
+}
+
+void insere_cliente(FILE* tabHash, FILE* clientes, char nome[], int cod, int tamanho, int posCliente){
+    int posHash = pos_hash(cod, tamanho);
+
+    rewind(tabHash);
+    fseek(tabHash, posHash * sizeof(int), SEEK_SET); //cursor do tabHash na posHash
+    
+    int cliPos = ler_valorHash(tabHash);
+    if(cliPos == -1){
+        //Está livre entao é só inserir
+        Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
+        cli = cliente(cod, nome, -1, false);
+        salvar_cliente(cli, clientes, posCliente);
+
+        int newClientePos = arquivo_pos(clientes, cod);
+
+        printf("✅ Cliente %d:%s inserido na posicao %d do arquivo Cliente e esta na posicao %d da tabela Hash\n", cli->cod, cli->nome, newClientePos, posHash);
+
+        salvar_tabHash(tabHash, newClientePos, posHash);
+        free(cli);
+    }
+    else if(cliPos == -2){
+        //Está lendo fora do arquivo
+        printf("❌ ERRO: Não foi possivel ler o arquivo de tabela Hash\n");
+        exit(1);
+    }
+    else{
+        Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
+        cli = cliente(cod, nome, -1, false);
+        salvar_cliente(cli, clientes, -1);
+
+        bool exit = true;
+        while(exit == true){
+            fseek(clientes, cliPos * tamanhoCliente(), SEEK_SET);
+            Cliente *cliTemp = ler_cliente(clientes);
+
+            if(cliTemp->prox == -1){
+                int newClientePos = arquivo_pos(clientes, cod);
+                cliTemp->prox = newClientePos;
+                salvar_cliente(cliTemp, clientes, cliPos);
+                printf("✅ Cliente %d:%s inserido na posicao %d do arquivo Cliente e é o próximo cliente do cliente %d da posição %d da tabela Hash\n", cli->cod, cli->nome, newClientePos, cliTemp->cod, posHash);
+                exit = false;
+            }
+            else{
+                cliPos = cliTemp->prox;
+            }
+
+            free(cliTemp);
+        }
     }
 }
 
-void salvar_hash(int posicao, FILE *out) {
-    fwrite(posicao, sizeof(int), 1, out);
-}
+void excluir_cliente(FILE* tabHash, FILE* clientes, int cod, int tamanho){
+    int posHash = pos_hash(cod, tamanho);
 
-void sobrescreve_hash_no_arquivo(FILE *out, int posicaoHash, int posicao) {
-    printf("\n\nSobrescrevendo cliente no arquivo hash...\n\n");
-    //pula primeiros n registros para posicionar no início do quarto registro
-    fseek(out, sizeof(int) * posicaoHash, SEEK_SET);
-    salvar_hash(posicao, out);
+    rewind(tabHash);
+    fseek(tabHash, posHash * sizeof(int), SEEK_SET); //cursor do tabHash na posHash
+
+    int atual = ler_valorHash(tabHash);
+    int anterior = -1;
+    Cliente* pCli;
+    Cliente* cliTemp;
+
+    bool exit = true;
+    while(exit == true){
+        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        pCli = ler_cliente(clientes);
+
+        if(pCli->cod != cod){  
+            anterior = atual;
+            atual = pCli->prox;
+        }
+        else{
+            break;
+        }
+    }
+
+    if(anterior == -1){
+        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        cliTemp = ler_cliente(clientes);
+        cliTemp->status = true; //Libera cliente no arquivo cliente
+        salvar_cliente(cliTemp, clientes, atual);
+
+        salvar_tabHash(tabHash, cliTemp->prox, posHash);
+        printf("✅ O cliente de código %d foi excluido\n", cliTemp->cod);
+        free(cliTemp);
+        return;
+    }
+    else{
+        fseek(clientes, atual * tamanhoCliente(), SEEK_SET);
+        Cliente* cliAtual = ler_cliente(clientes);
+        cliAtual->status = true; //Libera cliente no arquivo cliente
+        salvar_cliente(cliAtual, clientes, atual);
+
+        fseek(clientes, anterior * tamanhoCliente(), SEEK_SET);
+        cliTemp = ler_cliente(clientes);
+        cliTemp->prox = cliAtual->prox;
+        salvar_cliente(cliTemp, clientes, anterior);
+
+        salvar_tabHash(tabHash, anterior, posHash);
+        printf("✅ O cliente de código %d foi excluido\n", cliTemp->cod);
+        free(cliAtual);
+        free(cliTemp);
+    }
+
+    free(pCli);
 }

@@ -11,6 +11,6 @@ cliente.o: cliente.c
 compartimento_hash.o: compartimento_hash.c 
 	gcc -c -o compartimento_hash.o compartimento_hash.c
 
-# Remove todos os arquivos temporários
+# Remove todos os arquivos de input/output
 clean:
-	rm -f main
+	rm -f *.dat

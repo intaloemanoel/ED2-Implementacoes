@@ -5,22 +5,28 @@
 #include <stdlib.h>
 #include "cliente.h"
 
+//Função de hashing
 int pos_hash(int chave, int tamanho);
 
-void inicializa_tabela(Cliente* Hash[], int tamanho);
+//Inicializa tabela com -1 no tamanho desejado
+int inicializa_tabela(FILE* tabHash);
 
-void insere_cliente(Cliente* cli, Cliente* Hash[], int tamanho, FILE *out, FILE *outHash);
+//Salva a tabela hash com um cliente na posicao desejada
+void salvar_tabHash(FILE *out, int cli, int pos);
 
-Cliente* buscar_cliente(Cliente* Hash[], int codigo, int tamanho);
+//Imprime toda a tabela hash
+int imprime_tabela(FILE *tabHash);
 
-void remover_cliente(Cliente* Hash[], int codigo, int tamanho);
+//Retorna o valor que está na tabela Hash posicao do cursor
+int ler_valorHash(FILE *tabHash);
 
-void libera_tabela(Cliente* Hash[], int tamanho);
+//Verifica se o cliente existe atualmente na tabela hash
+int busca_cliente_tabelaHash(FILE *clientes, int cod);
 
-void imprimir_tabela(Cliente* Hash[], int tamanho);
+//Insere um cliente novo na tabela Hash
+void insere_cliente(FILE* tabHash, FILE* clientes, char nome[], int cod, int tamanho, int posCliente);
 
-void salvar_hash(int posicao, FILE *out);
-
-void sobrescreve_hash_no_arquivo(FILE *out, int posicaoHash, int posicao);
+//Exclui um cliente na tabela Hash
+void excluir_cliente(FILE* tabHash, FILE* clientes, int cod, int tamanho);
 
 #endif

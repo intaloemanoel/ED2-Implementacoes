@@ -1,75 +1,107 @@
 #include "cliente.h"
-#include <string.h>
 #include <stdlib.h>
-#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
-// Imprime cliente
-void imprimir(Cliente *cli) {
-    printf("**********************************************");
-    printf("\nCliente de código ");
-    printf("%d", cli->cod);
-    printf("\nNome: ");
-    printf("%s", cli->nome);
-    printf("\n**********************************************\n");
-}
-
-// Cria cliente.
-Cliente *cliente(int cod, char *nome) {
+Cliente *cliente(int cod, char *nome, int prox, bool status){
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 
-    //inicializa espaço de memória com ZEROS
     if (cli){
         memset(cli, 0, sizeof(Cliente));
     }
 
-    //copia valores para os campos de cliente
     cli->cod = cod;
     strcpy(cli->nome, nome);
-    cli->proximo = NULL;
-
+    cli->prox = prox;
+    cli->status = status;
     return cli;
 }
 
-// Salva cliente no arquivo out, na posicao atual do cursor
-void salvar(Cliente *cli, FILE *out) {
-    fwrite(&cli->cod, sizeof(int), 1, out);
-
-    fwrite(cli->nome, sizeof(char), sizeof(cli->nome), out);
+// Imprime funcionario
+void imprime(Cliente *cli) {
+    printf("\n**********************************************");
+    printf("\nCliente de Codigo: %d", cli->cod);
+    printf("\nNome: %s", cli->nome);
+    printf("\nPROXIMO CLIENTE: %d", cli->prox);
+    printf("\nSTATUS: %d", cli->status);
+    printf("\n**********************************************\n");
 }
 
-// Le um cliente do arquivo in na posicao atual do cursor
-// Retorna um ponteiro para o cliente lido do arquivo
-Cliente *ler(FILE *in) {
+// Salva cliente no arquivo out, na posicao atual do cursor
+void salvar_cliente(Cliente *cli, FILE *out, int pos) {
+    if(pos == -1){
+        //Salvar no final do arquivo
+        fseek(out, 0, SEEK_END);
+    }
+    else{
+        //Sobrescrever o arquivo na posicao pos
+        fseek(out, pos * tamanhoCliente(), SEEK_SET);
+    }
+    
+    fwrite(&cli->cod, sizeof(int), 1, out);
+    fwrite(cli->nome, sizeof(char), sizeof(cli->nome), out);
+    fwrite(&cli->prox, sizeof(int), 1, out);
+    fwrite(&cli->status, sizeof(bool), 1, out);
+}
+
+
+// Le um funcionario do arquivo in na posicao atual do cursor
+// Retorna um ponteiro para funcionario lido do arquivo
+Cliente *ler_cliente(FILE *in) {
     Cliente *cli = (Cliente *) malloc(sizeof(Cliente));
 
     if (0 >= fread(&cli->cod, sizeof(int), 1, in)) {
         free(cli);
         return NULL;
     }
-
+    
     fread(cli->nome, sizeof(char), sizeof(cli->nome), in);
+    fread(&cli->prox, sizeof(int), 1, in);
+    fread(&cli->status, sizeof(bool), 1, in);
     return cli;
 }
 
-// Retorna tamanho do cliente em bytes
-int tamanho() {
-    return sizeof(int)  //cod
-            + sizeof(char) * 100; //nome
+void le_clientes(FILE *in) {
+    printf("\nLendo clientes do arquivo...\n");
+    rewind(in);
+
+    Cliente *cli;
+
+    int i = 0;
+    while ((cli = ler_cliente(in)) != NULL) {
+        printf("\nPosicao %d no arquivo cliente.dat", i);
+        imprime(cli);
+        free(cli);
+        i++;
+    }
 }
 
-void sobrescreve_cliente_no_arquivo(FILE *out, int posicao, cliente* cliente) {
-    printf("\n\nSobrescrevendo cliente do arquivo...\n\n");
-    //pula primeiros n clientes para posicionar no início do cliente que ira subscrever
-    fseek(out, tamanho() * posicao, SEEK_SET);
-    salva(cliente, out);
-    free(cliente);
+int arquivo_pos(FILE *in, int cod){
+    rewind(in);
 
-    //le cliente que acabou de ser gravado
-    //posiciona novamente o cursor no início desse cliente
-    fseek(out, tamanho() * posicao, SEEK_SET);
-    Cliente* c = ler(out);
-    if (c != NULL) {
-        imprimir(c);
-        free(c);
+    int i = 0;
+    Cliente *cli;
+    while ((cli = ler_cliente(in)) != NULL) {
+        if(cli->cod == cod){
+            printf("\nCliente %d está na posicao %d\n", cod, i);
+            imprime(cli);
+            free(cli);
+            return i;
+        }
+        else{
+            i++;
+            free(cli);
+        }
     }
+
+    return -1;
+}
+
+// Retorna tamanho do clientepai em bytes
+int tamanhoCliente() {
+    return sizeof(int)
+            + sizeof(char) * 100 
+            + sizeof(int)
+            + sizeof(bool);
 }
