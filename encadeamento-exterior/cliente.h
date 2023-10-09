@@ -27,12 +27,12 @@ void salvar_cliente(Cliente *cli, FILE *out, int pos);
 Cliente *ler_cliente(FILE *in);
 
 //Le todos os clientes do arquivo
-void le_clientes(FILE *in);
+void ler_clientes(FILE *in);
 
 //Pega a posicao do cliente no arquivo
 int arquivo_pos(FILE *in,int cod);
 
 // Retorna tamanho do cliente em bytes
-int tamanhoCliente();
+int tamanho_cliente();
 
 #endif
