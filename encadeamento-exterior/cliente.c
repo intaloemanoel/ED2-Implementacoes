@@ -101,6 +101,28 @@ int arquivo_pos(FILE *in, int cod){
     return -1;
 }
 
+//Pega a posicao do cliente no arquivo
+int posicao_livre(FILE *in){
+    rewind(in);
+
+    int i = 0;
+    Cliente *cli;
+    while ((cli = ler_cliente(in)) != NULL) {
+        if(cli->status == true){
+            free(cli);
+            //espaço liberado. Devolver esta posicao para ser sobrescrita.
+            return i;
+        }
+        else{
+            i++;
+            free(cli);
+        }
+    }
+
+    //Final do arquivo
+    return -1;
+}
+
 // Retorna tamanho do cliente em bytes
 int tamanho_cliente() {
     return sizeof(int)

@@ -18,12 +18,9 @@ void inserir(FILE *tabHash, FILE *clientes, int tamanho){
 
     int existeCliente = busca_cliente_tabelaHash(clientes, cod);
 
-    if(existeCliente == -1){
-        insere_cliente(tabHash, clientes, nome, cod, tamanho, -1);
-    }
-    else if(existeCliente == -2){
-        int posCliente = arquivo_pos(clientes, cod);
-        insere_cliente(tabHash, clientes, nome, cod, tamanho, posCliente);
+    if(existeCliente == -1 || existeCliente == -2){
+        int posicaoLivre = posicao_livre(clientes);
+        insere_cliente(tabHash, clientes, nome, cod, tamanho, posicaoLivre);
     }
     else{
         printf("\n❌ ERRO: Já existe cliente com este código na tabela Hash.\n");

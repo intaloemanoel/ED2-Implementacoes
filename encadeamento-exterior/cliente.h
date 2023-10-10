@@ -32,6 +32,9 @@ void ler_clientes(FILE *in);
 //Pega a posicao do cliente no arquivo
 int arquivo_pos(FILE *in,int cod);
 
+//Devolve a posicao que será inserido o novo cliente
+int posicao_livre(FILE *in);
+
 // Retorna tamanho do cliente em bytes
 int tamanho_cliente();
 
