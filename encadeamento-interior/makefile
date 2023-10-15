@@ -3,7 +3,7 @@ all: main
 
 # Compila o arquivo de origem C em um arquivo objeto
 main: main.c cliente.o compartimento_hash.o
-	gcc -o impUm main.c cliente.o compartimento_hash.o
+	gcc -o impDois main.c cliente.o compartimento_hash.o
 
 cliente.o: cliente.c
 	gcc -c -o cliente.o cliente.c

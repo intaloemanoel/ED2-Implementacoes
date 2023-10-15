@@ -27,8 +27,10 @@ int busca_cliente_tabelaHash(FILE *tabHash, int cod, int hash);
 void insere_cliente(FILE* tabHash, char nome[], int cod, int tamanho, int posCliente);
 
 //Exclui um cliente na tabela Hash
-void excluir_cliente(FILE* clientes, int cod, int tamanho);
+void excluir_cliente(FILE* clientes, int cod, int tamanho, int posicao);
 
 int compara_cliente_temporario(Cliente* cli, Cliente* cliTemp, int tamanho);
+
+int buscar_pos_cliente(FILE *tabHash, int cod);
 
 #endif

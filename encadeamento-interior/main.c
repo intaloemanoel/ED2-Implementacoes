@@ -52,7 +52,7 @@ void buscar(FILE* clientes, int tamanho){
     }
 }
 
-void excluir(FILE *clientes, int tamanho){
+void excluir(FILE *tabHash, int tamanho){
     int cod;
     
     printf("-------- EXCLUIR CLIENTE --------\n");
@@ -60,18 +60,14 @@ void excluir(FILE *clientes, int tamanho){
     printf("🔢 Código: ");
     scanf("%d", &cod);
 
-    int hash = pos_hash(cod, tamanho);
+    int posCliente = buscar_pos_cliente(tabHash, cod);
 
-    int existeCliente = busca_cliente_tabelaHash(clientes, cod, hash);
-    printf("existe Cliente: %d\n", existeCliente);
-
-    if(existeCliente == -1){
+    if(posCliente == -1){
         printf("\n ERRO: Não existe cliente com este código na tabela Hash.\n");
     }
     else{
-        excluir_cliente(clientes, cod, tamanho);
-    }
-    
+        excluir_cliente(tabHash, cod, tamanho, posCliente);
+    } 
 }
 
 void main(int argc, char** argv) {
@@ -87,7 +83,7 @@ void main(int argc, char** argv) {
     if (outTabHash == NULL) {
         // Se o arquivo não existir, ele será criado.
         outTabHash = fopen("tabHash.dat", "w+b");
-        if (outClienoutTabHashtes == NULL) {
+        if (outTabHash == NULL) {
             printf("❌ Erro ao criar o arquivo da Tabela Hash.\n");
             exit(1);
         }
