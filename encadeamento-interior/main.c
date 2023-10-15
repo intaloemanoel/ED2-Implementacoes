@@ -23,7 +23,7 @@ void inserir(FILE *tabHash, int tamanho){
         insere_cliente(tabHash, nome, cod, tamanho, hash);
     }
     else if (existeCliente == -2 || existeCliente == -3) {
-        printf("\n❌ ERRO: Já existe cliente com este código na tabela Hash.\n");
+        printf("\n❌ ERRO: Já existe cliente com este código na Tabela Hash.\n");
     }
     else{
         insere_cliente(tabHash, nome, cod, tamanho, existeCliente);

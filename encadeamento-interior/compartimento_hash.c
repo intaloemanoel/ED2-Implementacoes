@@ -83,7 +83,6 @@ int busca_cliente_tabelaHash(FILE *tabHash, int cod, int hash){
             return i;
         }
         if(cli->cod == cod && flagTemp == 1){
-            printf("estou no if do cod!!!\n");
             free(cli);
             //Cliente ja existe e esta atualmente na tabela hash
             return -2;
@@ -134,12 +133,12 @@ void insere_cliente(FILE* tabHash, char nome[], int cod, int tamanho, int posCli
         //Está livre entao é só inserir
         int newClientePos = arquivo_pos(tabHash, cod);
 
-        printf("✅ Cliente %d:%s inserido na posicao %d do arquivo Cliente e esta na posicao %d da tabela Hash\n", cli->cod, cli->nome, newClientePos, posHash);
+        printf("✅ Cliente %d:%s inserido na posicao %d da Tabela Hash!\n", cli->cod, cli->nome, newClientePos);
         free(cli);
     }
     else if(cliPos == -2){
         //Está lendo fora do arquivo
-        printf("❌ ERRO: Não foi possivel ler o arquivo de tabela Hash\n");
+        printf("❌ ERRO: Não foi possivel ler o arquivo de Ttabela Hash\n");
         exit(1);
     }
     else{
