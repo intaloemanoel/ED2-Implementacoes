@@ -62,26 +62,39 @@ int ler_valorHash(FILE *tabHash) {
     Cliente* cli = ler_cliente(tabHash);
 
     if (cli == NULL) {
+        free(cli);
         return -2;
     }
 
+    free(cli);
     return cli->cod;
 }
 
 //Verifica se o cliente existe atualmente na tabela hash
-int busca_cliente_tabelaHash(FILE *tabHash, int cod, int hash){
+int busca_cliente_tabelaHash(FILE *tabHash, int cod, int hash, int tamanho){
     rewind(tabHash);
-
+    
+    tamanho -= 1;
     int i = 0;
     int canExit = 0;
     Cliente *cli;
     while ((cli = ler_cliente(tabHash)) != NULL) {
         int flagTemp = cli->flag;
+
+        //WORK IN PROGRESS
+        if(i == tamanho && canExit == 1){
+            rewind(tabHash);
+            i = 0;
+            printf("OVERFLOW MAS POSSO SAIR. RESETANDO TAB");
+            continue;
+        }
+
         if(flagTemp == 0 && canExit == 1) {
             free(cli);
             //Cliente nao existe na tabela, mas sua pos hash esta ocupada, sera inserido na primeira posicao vazia
             return i;
         }
+
         if(cli->cod == cod && flagTemp == 1){
             free(cli);
             //Cliente ja existe e esta atualmente na tabela hash
@@ -126,8 +139,8 @@ void insere_cliente(FILE* tabHash, char nome[], int cod, int tamanho, int posCli
     int cliPos = ler_valorHash(tabHash);
 
     Cliente* cli = (Cliente*)malloc(sizeof(Cliente));
-        cli = cliente(cod, nome, posCliente, 1);
-        salvar_cliente(cli, tabHash, posCliente);
+    cli = cliente(cod, nome, posCliente, 1);
+    salvar_cliente(cli, tabHash, posCliente);
 
     if(cliPos == -1){
         //Está livre entao é só inserir
@@ -138,7 +151,7 @@ void insere_cliente(FILE* tabHash, char nome[], int cod, int tamanho, int posCli
     }
     else if(cliPos == -2){
         //Está lendo fora do arquivo
-        printf("❌ ERRO: Não foi possivel ler o arquivo de Ttabela Hash\n");
+        printf("❌ ERRO: Não foi possivel ler o arquivo de Tabela Hash\n");
         exit(1);
     }
     else{

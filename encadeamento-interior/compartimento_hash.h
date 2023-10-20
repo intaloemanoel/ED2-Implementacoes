@@ -21,7 +21,7 @@ int imprime_tabela(FILE *tabHash);
 int ler_valorHash(FILE *tabHash);
 
 //Verifica se o cliente existe atualmente na tabela hash
-int busca_cliente_tabelaHash(FILE *tabHash, int cod, int hash);
+int busca_cliente_tabelaHash(FILE *tabHash, int cod, int hash, int tamanho);
 
 //Insere um cliente novo na tabela Hash
 void insere_cliente(FILE* tabHash, char nome[], int cod, int tamanho, int posCliente);

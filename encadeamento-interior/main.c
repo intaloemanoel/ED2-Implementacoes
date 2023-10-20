@@ -17,13 +17,16 @@ void inserir(FILE *tabHash, int tamanho){
     scanf("%s", nome);
 
     int hash = pos_hash(cod, tamanho);
-    int existeCliente = busca_cliente_tabelaHash(tabHash, cod, hash);
+    int existeCliente = busca_cliente_tabelaHash(tabHash, cod, hash, tamanho);
 
     if(existeCliente == -1){
         insere_cliente(tabHash, nome, cod, tamanho, hash);
     }
-    else if (existeCliente == -2 || existeCliente == -3) {
+    else if (existeCliente == -2) {
         printf("\n❌ ERRO: Já existe cliente com este código na Tabela Hash.\n");
+    }
+    else if(existeCliente == -3){
+        printf("\n❌ ERRO: OVERFLOW na tabela.\n");
     }
     else{
         insere_cliente(tabHash, nome, cod, tamanho, existeCliente);
@@ -41,7 +44,7 @@ void buscar(FILE* clientes, int tamanho){
 
     int hash = pos_hash(cod, tamanho);
 
-    int resultadoBusca = busca_cliente_tabelaHash(clientes, cod, hash);
+    int resultadoBusca = busca_cliente_tabelaHash(clientes, cod, hash, tamanho);
 
     if(resultadoBusca == -2){
         printf("✅ O cliente de código %d existe!\n", cod);
