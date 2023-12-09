@@ -44,6 +44,7 @@ Arvore insereR(Arvore raiz, No* novo, int digitoDif, No* pai);
 //Imprime árvore com base no Nó
 void imprimeArvore(No* raiz, int space);
 
+// Libera a memória utilizada pra armazenar a árvore
 void freeArvore(Arvore arvore);
 
 #endif
