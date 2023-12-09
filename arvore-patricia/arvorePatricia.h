@@ -25,25 +25,27 @@ typedef struct No {
 typedef No* Arvore;
 
 // Cria No. Lembrar de usar free(No)
-No* novoNo(Chave chave, Item conteudo, int digito);
+No* criarNo(Chave chave, Item conteudo, int digito);
 
-int pegaDigito(int chave, int digito);
-
-//Busca a chave desejada na árvore
-No* busca(Arvore raiz, Chave chave);
+// identifica o digito que o no representa
+int identificaDigito(int chave, int digito);
 
 //Busca a chave desejada na árvore
-No* buscaR(Arvore raiz, Chave chave, int digitoAnterior);
+No* buscarChave(Arvore raiz, Chave chave);
+
+//Busca a chave desejada na árvore
+No* buscaRecursiva(Arvore raiz, Chave chave, int digitoAnterior);
 
 //Insere novo Nó na árvore
-void inserir(Arvore raiz, Chave chave, Item conteudo);
+void inserirChave(Arvore raiz, Chave chave, Item conteudo);
 
 //Insere novo Nó na árvore
-Arvore insereR(Arvore raiz, No* novo, int digitoDif, No* pai);
+Arvore insereRecursiva(Arvore raiz, No* novo, int digitoDif, No* pai);
 
 //Imprime árvore com base no Nó
 void imprimeArvore(No* raiz, int space);
 
-void freeArvore(Arvore arvore);
+// Libera a memória utilizada pra armazenar a árvore
+void liberaArvore(Arvore arvore);
 
 #endif

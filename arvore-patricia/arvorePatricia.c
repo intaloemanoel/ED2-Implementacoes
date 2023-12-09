@@ -22,7 +22,8 @@ No* criaNo(char rotulo[50]){
     return node;
 }*/
 
-No* novoNo(Chave chave, Item conteudo, int digito){
+// cria novo no
+No* criarNo(Chave chave, Item conteudo, int digito){
     No* novo;
     novo = (No*) malloc(sizeof(No));
     novo->chave = chave;
@@ -33,86 +34,93 @@ No* novoNo(Chave chave, Item conteudo, int digito){
     return novo;
 }
 
-int pegaDigito(int chave, int digito){
+// identifica o digito que a no representa
+int identificaDigito(int chave, int digito){
     return (int)((chave >>
     (bitsDigito * (digitosPalavra - 1 - digito))) & (Base - 1));
 }
 
-No* busca(Arvore raiz, Chave chave){
-    No* alvo;
-    alvo = buscaR(raiz->esquerda, chave, -1);
-    return alvo->chave = chave ? alvo : NULL;
+// realiza a busca de uma chave na arvore
+No* buscarChave(Arvore raiz, Chave chave){
+    No* noEncontrado = buscaRecursiva(raiz->esquerda, chave, -1);
+    return noEncontrado->chave = chave ? noEncontrado : NULL;
 }
 
-No* buscaR(Arvore raiz, Chave chave, int digitoAnterior){
+// realiza busca na arvore, utiliza recursividade
+No* buscaRecursiva(Arvore raiz, Chave chave, int digitoAnterior){
     if(raiz->digito <= digitoAnterior){
         return raiz;
     }
 
-    if(pegaDigito(chave, raiz->digito) == 0)
-        return buscaR(raiz->esquerda, chave, raiz->digito);
+    if(identificaDigito(chave, raiz->digito) == 0) {
+        return buscaRecursiva(raiz->esquerda, chave, raiz->digito);
+    }
 
-    return buscaR(raiz->direita, chave, raiz->digito);
+    return buscaRecursiva(raiz->direita, chave, raiz->digito);
 }
 
-void inserir(Arvore raiz, Chave chave, Item conteudo){
-    int i;
-    No* aux = buscaR(raiz->esquerda, i, -1);
-    if(aux->chave == chave)
+// insere chave na arvore
+void inserirChave(Arvore raiz, Chave chave, Item conteudo){
+    int i=0;
+    No* aux = buscaRecursiva(raiz->esquerda, i, -1);
+    if(aux->chave == chave) {
         return;
-
-    for(i = 0; pegaDigito(chave, i) == pegaDigito(aux->chave, i); i++){
-        No* novo = novoNo(chave, conteudo, i);
-        raiz->esquerda = insereR(raiz->esquerda, novo, i, raiz);
+    }
+        
+    for(i = 0; identificaDigito(chave, i) == identificaDigito(aux->chave, i); i++){
+        No* novo = criarNo(chave, conteudo, i);
+        raiz->esquerda = insereRecursivo(raiz->esquerda, novo, i, raiz);
     }
 }
 
-Arvore insereR(Arvore raiz, No* novo, int digitoDif, No* pai){
+// insere a chave, utiliza estrategia recursiva
+Arvore insereRecursivo(Arvore raiz, No* novo, int digitoDif, No* pai){
     if((raiz->digito >= digitoDif) || (raiz->digito <= pai->digito)){
-        if(pegaDigito(novo->chave, digitoDif) == 1){
+        if(identificaDigito(novo->chave, digitoDif) == 1){
             novo->esquerda;
             novo->direita;
+
+            return novo;
         }
-        else{
-            novo->esquerda = novo;
-            novo->direita = raiz;
-        }
+
+        novo->esquerda = novo;
+        novo->direita = raiz;
         return novo;
     }
 
-    if(pegaDigito(novo->chave, raiz->digito) == 0)
-        raiz->esquerda = insereR(raiz->esquerda, novo, digitoDif, raiz);
-
-    raiz->direita = insereR(raiz->direita, novo, digitoDif, raiz);
+    if(identificaDigito(novo->chave, raiz->digito) == 0) {
+        raiz->esquerda = insereRecursivo(raiz->esquerda, novo, digitoDif, raiz);
+    }
+    raiz->direita = insereRecursivo(raiz->direita, novo, digitoDif, raiz);
+     return raiz;
 }
 
 
-// Imprime cliente
-//https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
-void imprimeArvore(No* raiz, int space)
-{
-    // Base case
-    if (raiz == NULL)
+// Imprime arvore
+void imprimeArvore(No* raiz, int espaco) {
+    // Base 
+    if (raiz == NULL) {
         return;
+    }
+
+    espaco += COUNT;
  
-    // Increase distance between levels
-    space += COUNT;
+    // Imprime o filho da direita
+    imprimeArvore(raiz->direita, espaco);
  
-    // Process right child first
-    imprimeArvore(raiz->direita, space);
- 
-    // Print current node after space
-    // count
+    // Imprime primeiro no apos o espaco
     printf("\n");
-    for (int i = COUNT; i < space; i++)
+    for (int i = COUNT; i < espaco; i++) {
         printf(" ");
+    }    
     printf("%s\n", raiz->digito);
  
-    // Process left child
-    imprimeArvore(raiz->esquerda, space);
+    // Imprime filho esquerdo
+    imprimeArvore(raiz->esquerda, espaco);
 }
 
-void freeArvore(Arvore arvore){
+// libera memória utilizada pela arvore
+void liberaArvore(Arvore arvore) {
     freeArvore(arvore->esquerda);
     freeArvore(arvore->direita);
     free(arvore);
