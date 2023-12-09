@@ -42,17 +42,17 @@ void main(int argc, char** argv) {
                 scanf("%d", &item);
                 printf("\n");
                 // void inserir(Arvore raiz, Chave chave, Item conteudo);
-                inserir(raiz, &item, item);
+                inserirChave(raiz, &item, item);
                 break;
             case 2:
             int item;
                 printf("Por favor diga a chave que deseja buscar: ");
                 scanf("%d", &item);
                 printf("\n");
-                buscar(raiz, item);
+                buscarChave(raiz, item);
                 break;
             case 3:
-                freeArvore(raiz);
+                liberaArvore(raiz);
                 break;
         }
     }
