@@ -6,79 +6,42 @@
 
 #define COUNT 10
 
-/*
-No* criaNo(char rotulo[50]){
-    No *node = (No *) malloc(sizeof(No));
-
-    if (node){
-        memset(node, 0, sizeof(No));
-    }
-
-    strcpy(node->rotulo, rotulo);
-    node->fimDaPalavra = false;
-    node->esquerda = NULL;
-    node->direita = NULL;
-
-    return node;
-}*/
-
 // cria novo no
-No* criarNo(Chave chave, Item conteudo, int digito){
-    No* novo;
-    novo = (No*) malloc(sizeof(No));
+No* criarNo(char* chave, int digito){
+    No* novo = (No*) malloc(sizeof(No));
+
     novo->chave = chave;
-    novo->conteudo = conteudo;
     novo->digito = digito;
     novo->esquerda = NULL;
     novo->direita = NULL;
+
     return novo;
 }
 
-// identifica o digito que a no representa
-int identificaDigito(int chave, int digito){
-    return (int)((chave >>
-    (bitsDigito * (digitosPalavra - 1 - digito))) & (Base - 1));
-}
-
-// realiza a busca de uma chave na arvore
-No* buscarChave(Arvore raiz, Chave chave){
-    No* noEncontrado = buscaRecursiva(raiz->esquerda, chave, -1);
-    return noEncontrado->chave = chave ? noEncontrado : NULL;
-}
-
 // realiza busca na arvore, utiliza recursividade
-No* buscaRecursiva(Arvore raiz, Chave chave, int digitoAnterior){
-    if(raiz->digito <= digitoAnterior){
+No* buscarChave(No* raiz, char* chave, int digitoAnterior){
+    if(raiz == NULL){
+        return NULL;
+    }
+
+    if(raiz->digito <= digitoAnterior){ //Folha
         return raiz;
     }
 
-    if(identificaDigito(chave, raiz->digito) == 0) {
-        return buscaRecursiva(raiz->esquerda, chave, raiz->digito);
+    if(chave[raiz->digito] == 0) { //Percorrer a esquerda
+        return buscarChave(raiz->esquerda, chave, raiz->digito);
     }
-
-    return buscaRecursiva(raiz->direita, chave, raiz->digito);
-}
-
-// insere chave na arvore
-void inserirChave(Arvore raiz, Chave chave, Item conteudo){
-    int i=0;
-    No* aux = buscaRecursiva(raiz->esquerda, i, -1);
-    if(aux->chave == chave) {
-        return;
-    }
-        
-    for(i = 0; identificaDigito(chave, i) == identificaDigito(aux->chave, i); i++){
-        No* novo = criarNo(chave, conteudo, i);
-        raiz->esquerda = insereRecursivo(raiz->esquerda, novo, i, raiz);
+    else{ //Percorrer a direita
+        return buscarChave(raiz->direita, chave, raiz->digito);
     }
 }
 
 // insere a chave, utiliza estrategia recursiva
-Arvore insereRecursivo(Arvore raiz, No* novo, int digitoDif, No* pai){
-    if((raiz->digito >= digitoDif) || (raiz->digito <= pai->digito)){
-        if(identificaDigito(novo->chave, digitoDif) == 1){
-            novo->esquerda;
-            novo->direita;
+No* inserirChave(No* raiz, No* pai, No* novo, int digitoDiferente){
+    if((raiz->digito >= digitoDiferente) || (raiz->digito <= pai->digito)){ //Chegou em folha ou quebra da inserção
+        if(novo->chave[digitoDiferente] == 1){
+            novo->esquerda = raiz;
+            novo->direita = novo;
 
             return novo;
         }
@@ -88,11 +51,12 @@ Arvore insereRecursivo(Arvore raiz, No* novo, int digitoDif, No* pai){
         return novo;
     }
 
-    if(identificaDigito(novo->chave, raiz->digito) == 0) {
-        raiz->esquerda = insereRecursivo(raiz->esquerda, novo, digitoDif, raiz);
+    if(novo->chave[raiz->digito] == 0) {
+        raiz->esquerda = insereRecursivo(raiz->esquerda, novo, digitoDiferente, raiz);
     }
-    raiz->direita = insereRecursivo(raiz->direita, novo, digitoDif, raiz);
-     return raiz;
+
+    raiz->direita = insereRecursivo(raiz->direita, novo, digitoDiferente, raiz);
+    return raiz;
 }
 
 
@@ -120,7 +84,7 @@ void imprimeArvore(No* raiz, int espaco) {
 }
 
 // libera memória utilizada pela arvore
-void liberaArvore(Arvore arvore) {
+void liberaArvore(No* arvore) {
     freeArvore(arvore->esquerda);
     freeArvore(arvore->direita);
     free(arvore);
