@@ -34,49 +34,6 @@ No* criarNo(Chave chave, Item conteudo, int digito){
     return novo;
 }
 
-// identifica o digito que a no representa
-int identificaDigito(int chave, int digito){
-    return (int)((chave >>
-    (bitsDigito * (digitosPalavra - 1 - digito))) & (Base - 1));
-}
-
-// realiza a busca de uma chave na arvore
-No* buscarChave(Arvore raiz, Chave chave){
-    No* noEncontrado = buscaRecursiva(raiz->esquerda, chave, -1);
-    return noEncontrado->chave = chave ? noEncontrado : NULL;
-}
-
-// realiza busca na arvore, utiliza recursividade
-No* buscaRecursiva(Arvore raiz, Chave chave, int digitoAnterior){
-    if(raiz->digito <= digitoAnterior){
-        return raiz;
-    }
-
-    if(identificaDigito(chave, raiz->digito) == 0) {
-        return buscaRecursiva(raiz->esquerda, chave, raiz->digito);
-    }
-
-    return buscaRecursiva(raiz->direita, chave, raiz->digito);
-}
-
-// insere chave na arvore
-void inserirChave(Arvore raiz, Chave chave, Item conteudo){
-    int i=0;
-    No* aux = buscaRecursiva(raiz->esquerda, i, -1);
-    if(aux->chave == chave) {
-        return;
-    }
-        
-    for(i = 0; identificaDigito(chave, i) == identificaDigito(aux->chave, i); i++){
-        No* novo = criarNo(chave, conteudo, i);
-        raiz->esquerda = insereRecursivo(raiz->esquerda, novo, i, raiz);
-    }
-}
-
-// insere a chave, utiliza estrategia recursiva
-Arvore insereRecursivo(Arvore raiz, No* novo, int digitoDif, No* pai){
-   
-}
 
 
 // Imprime arvore
@@ -102,14 +59,13 @@ void imprimeArvore(No* raiz, int espaco) {
     imprimeArvore(raiz->esquerda, espaco);
 }
 
+
 // libera memória utilizada pela arvore
 void liberaArvore(Arvore arvore) {
     freeArvore(arvore->esquerda);
     freeArvore(arvore->direita);
     free(arvore);
 }
-
-
 // quando andar pra esesquerda é 0
 // direita é 1
 int buscaChave(char[10] chave, Arvore raiz) {
