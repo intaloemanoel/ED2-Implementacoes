@@ -15,12 +15,13 @@ const int digitosPalavra = bitsPalavra / bitsDigito;
 const int Base = 1 << bitsDigito;
 
 typedef struct No {
-    Chave chave;
-    Item conteudo;
-    int digito;
+    char[10] conteudo;
+    int posicao;
     struct No *esquerda;
     struct No *direita;
 } No;
+
+typedef struct Arvore
 
 typedef No* Arvore;
 

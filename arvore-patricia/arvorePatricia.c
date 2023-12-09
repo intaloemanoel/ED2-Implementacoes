@@ -75,24 +75,7 @@ void inserirChave(Arvore raiz, Chave chave, Item conteudo){
 
 // insere a chave, utiliza estrategia recursiva
 Arvore insereRecursivo(Arvore raiz, No* novo, int digitoDif, No* pai){
-    if((raiz->digito >= digitoDif) || (raiz->digito <= pai->digito)){
-        if(identificaDigito(novo->chave, digitoDif) == 1){
-            novo->esquerda;
-            novo->direita;
-
-            return novo;
-        }
-
-        novo->esquerda = novo;
-        novo->direita = raiz;
-        return novo;
-    }
-
-    if(identificaDigito(novo->chave, raiz->digito) == 0) {
-        raiz->esquerda = insereRecursivo(raiz->esquerda, novo, digitoDif, raiz);
-    }
-    raiz->direita = insereRecursivo(raiz->direita, novo, digitoDif, raiz);
-     return raiz;
+   
 }
 
 
@@ -124,4 +107,55 @@ void liberaArvore(Arvore arvore) {
     freeArvore(arvore->esquerda);
     freeArvore(arvore->direita);
     free(arvore);
+}
+
+
+// quando andar pra esesquerda é 0
+// direita é 1
+int buscaChave(char[10] chave, Arvore raiz) {
+    char zero = "0";
+    char um = "1";
+    No* noDaVez = raiz;
+    for(int index=0; index<10; index++) {
+        if(noDaVez->conteudo == chave && noDaVez->esquerda == NULL && noDaVez->direita==NULL) {
+            // encontrou
+            return 1;
+        } 
+        if(chave[index] == zero && noDaVez->posicao == index+1) {
+            noDaVez = noDaVez->esquerda;
+            continue;
+        }
+        if (chave[index] == um && noDaVez->posicao == index+1) {
+            noDaVez = noDaVez->direita;
+            continue;
+        }
+    }
+    // nao encontrei
+    return 0;
+}
+
+void insereChaveNaArvore(char[10] chave, Arvore raiz) {
+    char zero = "0";
+    char um = "1";
+    No* noDaVez = raiz;
+    for(int index=0; index<10; index++) {
+        if(noDaVez->conteudo == chave && noDaVez->esquerda == NULL && noDaVez->direita==NULL) {
+            // encontrou
+            printf("ja se encontra na arvore");
+            break;
+        }
+        if (noDaVez->esquerda == NULL && noDaVez->direita == NULL && noDaVez->conteudo == "") {
+            noDaVez->conteudo = chave;
+            break;
+        }
+        if(chave[index] == zero && noDaVez->posicao == index+1) {
+            noDaVez = noDaVez->esquerda;
+            continue;
+        }
+        if (chave[index] == um && noDaVez->posicao == index+1) {
+            noDaVez = noDaVez->direita;
+            continue;
+        }
+    }
+
 }
