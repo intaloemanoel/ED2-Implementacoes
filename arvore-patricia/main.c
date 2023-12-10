@@ -7,59 +7,55 @@
 No* buscar(No* raiz, char* chave){
     No* busca;
 
-    if(chave[0] == 0){ //Percorre o lado esquerdo
-        busca = buscarChave(raiz->esquerda, chave, -1);
-    }
-    else{
-        busca = buscarChave(raiz->direita, chave, -1);
-    }
+    busca = buscarChave(raiz, chave, 0);
     
-    if (busca == NULL)
-    {
-        printf("Não foi encontrado na Árvore.\n");
-        free(busca);
-        return NULL;
-    }
-    
-    if(busca->chave == chave){
+    if(strcmp(busca->chave,chave) == 0){
         printf("Chave %s foi encontrada na Árvore.\n", chave);
         return busca;
     }
+    else{
+        printf("Não foi encontrado na Árvore.\n");
+        return NULL;
+    }
 
-    free(busca);
     return NULL;
 }
 
 No* inserir(No* raiz, char* chave){
-    No* busca = buscar(raiz, chave);
+    int inicia = 0;
+    No* busca;
+    while (inicia == 0)
+    {
+        busca = buscarChave(raiz, chave, 0);
 
-    if(busca != NULL){
-        printf("ERRO: Chave já existente na árvore!\n");
+        if(strcmp(busca->chave, chave) == 0){
+            printf("Chave %s foi encontrada na Árvore.\n", chave);
+            return busca;
+        }
+        else{
+            printf("Não foi encontrado na Árvore. Iniciando inserção...\n");
+        }
+
+        int i = 0;
+        if (strcmp(busca->chave, "-1") != 0) { //Raiz
+            while(pegaDigito(chave, i) == pegaDigito(busca->chave, i)){
+                i++; //Pegar onde o digito difere entre a chave e o caminho encontrado
+            }
+        }
+
+        busca = inserirChave(busca, chave, i);
     }
-
-    int i = 0;
-    while(chave[i] == busca->chave[i]){
-        i++; //Pegar onde o digito difere entre a chave e o caminho encontrado
-    }
-
-    No* novo = criarNo(chave, i);
-    //raiz->esquerda = inserirChave(raiz->esquerda, novo, i, raiz);
-    
-    free(busca);
-    free(novo);
 }
-
-
 
 void main(int argc, char** argv) {
     // Raiz da árvore
     No* raiz;
     raiz = (No*)malloc(sizeof(No));
 
-    raiz->chave = __UINT32_MAX__; //CHAVE PARA RAIZ
+    raiz->chave = "-1"; //CHAVE PARA RAIZ
     raiz->esquerda = NULL;
     raiz->direita = NULL;
-    raiz->digito = -1;
+    raiz->digito = 0;
 
     printf("-------- ÁRVORE PATRÍCIA --------\n");
     printf("-------- ALEXIA ASSUMPÇÃO, ÍTALO EMANOEL E GUILHERME LOBO--------\n");
@@ -72,37 +68,42 @@ void main(int argc, char** argv) {
         printf("O que você deseja fazer?\n");
         printf("1 - ➕ Inserir Chave\n");
         printf("2 - 🔍 Buscar Chave\n");
-        printf("3 - 👋 Sair\n");
+        printf("3 - 🖨️ Imprimir Árvore\n");
+        printf("4 - 👋 Sair\n");
         printf("Opção: ");
         scanf("%d", &opcao);
         printf("\n");
 
-        if(opcao < 1 || opcao > 3){
+        if(opcao < 1 || opcao > 4){
             printf("%d não é valido. Por favor, utilize uma das opções abaixo.\n", opcao);
                 continue;
         }
 
+        char chave[10];
+
         switch (opcao) {
             case 1:
-                char* chave;
                 printf("Por favor diga a chave que deseja inserir: ");
-                scanf("%d", &chave);
+                scanf("%s", chave);
                 printf("\n");
 
                 inserir(raiz, chave);
-                //inserirChave(raiz, &chave);
+
+                //inserirChave(raiz, chave, 0);
                 break;
             case 2:
-                char* chave;
                 printf("Por favor diga a chave que deseja buscar: ");
-                scanf("%d", &chave);
+                scanf("%s", chave);
                 printf("\n");
                 
                 buscar(raiz, chave);
 
                 break;
             case 3:
-                printf("Limpando a memória...");
+                imprimeArvore(raiz, 0);
+                break;
+            case 4:
+                printf("Limpando a memória...\n");
                 menu = 1;
                 break;
         }

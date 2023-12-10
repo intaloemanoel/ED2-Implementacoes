@@ -12,6 +12,8 @@ typedef struct No {
     struct No *direita;
 } No;
 
+int pegaDigito(char* chave, int digito);
+
 // Cria No. Lembrar de usar free(No)
 No* criarNo(char* chave, int digito);
 
@@ -19,7 +21,7 @@ No* criarNo(char* chave, int digito);
 No* buscarChave(No* raiz, char* chave, int digitoAnterior);
 
 //Insere novo Nó na árvore
-No* inserirChave(No* raiz, No* pai, No* novo, int digitoDiferente);
+No* inserirChave(No* raiz, char* chave, int digitoDiferente);
 
 //Imprime árvore com base no Nó
 void imprimeArvore(No* raiz, int space);
