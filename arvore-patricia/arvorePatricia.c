@@ -11,63 +11,80 @@ int pegaDigito(char* chave, int digito){
 }
 
 // cria novo no
-No* criarNo(char* chave, int digito){
+No* criarNo(char* chave, int digito, bool ehFim){
     No* novo = (No*) malloc(sizeof(No));
 
     novo->chave = chave;
     novo->digito = digito;
     novo->esquerda = NULL;
     novo->direita = NULL;
+    novo->ehFim = ehFim;
 
     return novo;
 }
 
-No* buscarChave(No* raiz, char* chave, int digitoAnterior){
-    if(raiz == NULL){
+No* buscarChave(No* noh, char* chave, int digitoAnterior){
+    if(noh == NULL){
         return NULL;
     }
 
-    printf("Heeeey");
-    printf("RAIZ->DIGITO: %d :: STRLEN: %d\n", raiz->digito, (int)(strlen(chave) - 1));
-    int chaveLenght = (int)(strlen(chave) - 1);
-    printf("ChaveLen declarada");
-    if(raiz->digito == 2){
-        printf("entrei");
-        if(strcmp(raiz->chave, chave) == 0){
-            if(raiz->esquerda == NULL && raiz->direita == NULL){
-                printf("NESTE CU");
-                return raiz;
+    if(chave[noh->digito] == '\0'){
+        if(noh->ehFim == true){ //achou uma chave
+            if(strcmp(noh->chave, chave) == 0){
+                return noh;
             }
+            return NULL;
         }
     }
 
-    printf("Heeeeeeeey");
-    //printf("Digito %d é %d\n", raiz->digito, pegaDigito(chave, raiz->digito));
-
-    if(pegaDigito(chave, raiz->digito) == 0) { //Percorrer a esquerda
-        //printf("Chave [%d] = %s || %s", digitoAnterior, raiz->esquerda->chave, chave);
-        return buscarChave(raiz->esquerda, chave, raiz->digito);
+    if(pegaDigito(chave, noh->digito) == 0) { //Percorrer a esquerda
+        return buscarChave(noh->esquerda, chave, noh->digito);
     }
-    else if(pegaDigito(chave, raiz->digito) == 1){ //Percorrer a direita
-        //printf("Chave [%d] = %s || %s", digitoAnterior, raiz->direita->chave, chave);
-        return buscarChave(raiz->direita, chave, raiz->digito);
+    else if(pegaDigito(chave, noh->digito) == 1){ //Percorrer a direita
+        return buscarChave(noh->direita, chave, noh->digito);
     }
     else{
         return NULL;
     }
 }
 
-// Teste inserção binária
-No* inserirChave(No* raiz, char* chave, int digitoDiferente){
-    if(raiz == NULL){
-        return raiz = criarNo(chave, digitoDiferente);
-    }
+void inserirChave(No* raiz, char* chave){
+    No* noh = raiz;
 
-    if(pegaDigito(chave, digitoDiferente) == 0){
-        return raiz->esquerda = inserirChave(raiz->esquerda, chave, digitoDiferente + 1);
-    }
-    else{
-        return raiz->direita = inserirChave(raiz->direita, chave, digitoDiferente + 1);
+    for (int i = 0; i < strlen(chave); i++) {
+        int digito = pegaDigito(chave, i);
+        
+        if(noh->ehFim == true){
+            printf("ERRO: Inserção Inválida! Tentando inserir uma palavra que contém uma palavra final no meio.\n");
+            return;
+        }
+
+        if(digito == 0){
+            if(noh->esquerda == NULL){
+                if(chave[i + 1] == '\0'){
+                    noh->esquerda = criarNo(chave, i + 1, true);
+                    printf("Chave %s inserida com sucesso\n", chave);
+                    return;
+                }
+
+                noh->esquerda = criarNo(chave, i + 1, false);
+            }
+            
+            noh = noh->esquerda;
+        }
+        else if (digito == 1){
+            if(noh->direita == NULL){
+                if(chave[i + 1] == '\0'){
+                    noh->direita = criarNo(chave, i + 1, true);
+                    printf("Chave %s inserida com sucesso\n", chave);
+                    return;
+                }
+
+                noh->direita = criarNo(chave, i + 1, false);
+            }
+            
+            noh = noh->direita;
+        }
     }
 }
 

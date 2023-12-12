@@ -4,47 +4,21 @@
 #include <stdbool.h>
 #include "arvorePatricia.h"
 
-No* buscar(No* raiz, char* chave){
-    No* busca;
+bool buscar(No* raiz, char* chave){
+    printf("Iniciando busca da chave: %s\n", chave);
 
-    busca = buscarChave(raiz, chave, 0);
+    No* busca = buscarChave(raiz, chave, 0);
     
-    if(strcmp(busca->chave,chave) == 0){
-        printf("Chave %s foi encontrada na Árvore.\n", chave);
-        return busca;
-    }
-    else{
+    if(busca == NULL){
         printf("Não foi encontrado na Árvore.\n");
-        return NULL;
+        return false;
+    }
+    else if(strcmp(busca->chave,chave) == 0){
+        printf("Chave %s foi encontrada na Árvore.\n", chave);
+        return true;
     }
 
-    return NULL;
-}
-
-No* inserir(No* raiz, char* chave){
-    int inicia = 0;
-    No* busca;
-    while (inicia == 0)
-    {
-        busca = buscarChave(raiz, chave, 0);
-
-        if(strcmp(busca->chave, chave) == 0){
-            printf("Chave %s foi encontrada na Árvore.\n", chave);
-            return busca;
-        }
-        else{
-            printf("Não foi encontrado na Árvore. Iniciando inserção...\n");
-        }
-
-        int i = 0;
-        if (strcmp(busca->chave, "-1") != 0) { //Raiz
-            while(pegaDigito(chave, i) == pegaDigito(busca->chave, i)){
-                i++; //Pegar onde o digito difere entre a chave e o caminho encontrado
-            }
-        }
-
-        busca = inserirChave(busca, chave, i);
-    }
+    return false;
 }
 
 void main(int argc, char** argv) {
@@ -53,6 +27,7 @@ void main(int argc, char** argv) {
     raiz = (No*)malloc(sizeof(No));
 
     raiz->chave = "-1"; //CHAVE PARA RAIZ
+    raiz->ehFim = false;
     raiz->esquerda = NULL;
     raiz->direita = NULL;
     raiz->digito = 0;
@@ -87,14 +62,15 @@ void main(int argc, char** argv) {
                 scanf("%s", chave);
                 printf("\n");
 
-                inserir(raiz, chave);
-
-                //inserirChave(raiz, chave, 0);
+                bool existe = buscar(raiz, chave);
+                
+                if(existe == false){
+                    inserirChave(raiz, chave);
+                }
                 break;
             case 2:
                 printf("Por favor diga a chave que deseja buscar: ");
                 scanf("%s", chave);
-                printf("\n");
                 
                 buscar(raiz, chave);
 
