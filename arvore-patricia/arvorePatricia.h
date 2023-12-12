@@ -24,7 +24,7 @@ No* buscarChave(No* raiz, char* chave, int digitoAnterior);
 //Insere novo Nó na árvore
 void inserirChave(No* raiz, char* chave);
 
-void transformarPatricia(No* raiz);
+void transformarPatricia(No** raiz);
 
 //Imprime árvore com base no Nó
 void imprimeArvore(No* raiz, int space);

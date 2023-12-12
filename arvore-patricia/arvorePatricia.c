@@ -88,6 +88,43 @@ void inserirChave(No* raiz, char* chave){
     }
 }
 
+
+void transformarPatricia(No** noh){
+    if((*noh) == NULL){
+        return;
+    }
+
+    int novoDigito;
+    if((*noh)->digito > 0){ //Tira a raiz
+        No* copia;
+        if((*noh)->esquerda != NULL & (*noh)->direita == NULL){
+            copia = (*noh)->esquerda;
+            novoDigito = (*noh)->digito + 1;
+
+            (*noh) = (*noh)->esquerda;
+            (*noh)->esquerda = copia->esquerda;
+            (*noh)->direita = copia->direita;
+
+            (*noh)->digito = novoDigito;
+        }
+        if((*noh)->esquerda == NULL & (*noh)->direita != NULL){
+            copia = (*noh)->direita;
+            novoDigito = (*noh)->digito + 1;
+
+            (*noh) = (*noh)->direita;
+            (*noh)->direita = NULL;
+            (*noh)->esquerda = copia->esquerda;
+            (*noh)->direita = copia->direita;
+
+            (*noh)->digito = novoDigito;
+            
+        }
+    }
+    
+    transformarPatricia(&(*noh)->esquerda);
+    transformarPatricia(&(*noh)->direita);
+}
+
 // Imprime arvore
 void imprimeArvore(No* raiz, int espaco) {
     // Base 
@@ -111,7 +148,12 @@ void imprimeArvore(No* raiz, int espaco) {
     }
     else
     {
-        printf("%d\n", raiz->digito);
+        if(raiz->ehFim == true){
+            printf("PALAVRA\n");
+        }
+        else{
+            printf("%d\n", raiz->digito);
+        }
     }
 
     // Imprime filho esquerdo

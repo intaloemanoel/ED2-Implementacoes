@@ -79,6 +79,9 @@ void main(int argc, char** argv) {
                 imprimeArvore(raiz, 0);
                 break;
             case 4:
+                printf("\nA árvore Patricia resultante é: \n");
+                transformarPatricia(&raiz);
+                imprimeArvore(raiz, 0);
                 printf("Limpando a memória...\n");
                 menu = 1;
                 break;
