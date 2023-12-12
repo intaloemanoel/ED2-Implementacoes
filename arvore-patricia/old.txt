@@ -1,0 +1,39 @@
+No* buscarChave(No* raiz, char* chave, int digitoAnterior){
+    if(raiz == NULL){
+        return NULL;
+    }
+
+    if(raiz->digito <= digitoAnterior){ //Folha
+        return raiz;
+    }
+
+    if(chave[raiz->digito] == 0) { //Percorrer a esquerda
+        return buscarChave(raiz->esquerda, chave, raiz->digito);
+    }
+    else{ //Percorrer a direita
+        return buscarChave(raiz->direita, chave, raiz->digito);
+    }
+}
+
+// insere a chave, utiliza estrategia recursiva
+No* inserirChave(No* raiz, No* pai, No* novo, int digitoDiferente){
+    if((raiz->digito >= digitoDiferente) || (raiz->digito <= pai->digito)){ //Chegou em folha ou quebra da inserção
+        if(novo->chave[digitoDiferente] == 1){
+            novo->esquerda = raiz;
+            novo->direita = novo;
+
+            return novo;
+        }
+
+        novo->esquerda = novo;
+        novo->direita = raiz;
+        return novo;
+    }
+
+    if(novo->chave[raiz->digito] == 0) {
+        raiz->esquerda = inserirChave(raiz->esquerda, novo, raiz, digitoDiferente);
+    }
+
+    raiz->direita = inserirChave(raiz->direita, novo, raiz, digitoDiferente);
+    return raiz;
+}

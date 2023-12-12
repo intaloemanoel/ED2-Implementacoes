@@ -7,3 +7,6 @@ main: main.c arvorePatricia.o
 
 arvorePatricia.o: arvorePatricia.c 
 	gcc -c -o arvorePatricia.o arvorePatricia.c
+
+clean:
+	rm -f *.o
